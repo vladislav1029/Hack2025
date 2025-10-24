@@ -118,11 +118,17 @@ class MinioSettings(AbstractSettings):
     private_bucket: str | None = Field(alias="PRIVATE_BUCKET", default=None)
 
 
+class UserAdmin(AbstractSettings):
+    mail: str = Field(alias="ADMIN_MAIL", default="admin@example.com")
+    password: str = Field(alias="ADMIN_PASSWORD")
+
+
 class Settings(AbstractSettings):
     db: PostgresqlSettings = PostgresqlSettings()
     alchemy: SQLAlchemySettings = SQLAlchemySettings()
     auth: Auth = Auth()
     minio: MinioSettings = MinioSettings()
+    admin: UserAdmin = UserAdmin()
 
 
 @lru_cache()
