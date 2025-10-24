@@ -8,8 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from abc import ABC
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-KEY_DIR = Path(__file__).resolve().parent.parent / "key"
+BASE_DIR = Path(__file__).resolve().parent.parent
+KEY_DIR = Path(__file__).resolve().parent / "key"
 
 
 class AbstractSettings(BaseSettings, ABC):

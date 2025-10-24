@@ -1,5 +1,6 @@
 import structlog
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.database import AsyncSessionDep
 from src.core.exceptions import ResourceNotFoundError
@@ -11,7 +12,6 @@ from src.logger_config import configure_logging
 from src.auth.endpoint import router as router_auth
 from src.file.endpoint import router as router_public
 from src.file.endpoint_secure import router as router_private
-
 log = structlog.get_logger()
 
 
@@ -38,7 +38,26 @@ def main() -> FastAPI:
     app.include_router(router=router_auth, prefix="/account")
     app.include_router(router=router_public, prefix="/file")
     app.include_router(router=router_private, prefix="/private")
+    origins = [
+        "http://localhost:3000",  # React default
+        "http://localhost:5173",  # Vite default
+        "http://127.0.0.1:3000",  # Alternative
+        "http://127.0.0.1:8001"
+    ]
 
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "Accept",
+            "Cache-Control",
+        ],
+        expose_headers=["Content-Disposition"],
+    )
     log.info("Start APP")
 
     @app.get("/test", description="Проверка что сессии работают.")
