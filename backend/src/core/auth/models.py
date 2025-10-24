@@ -15,7 +15,7 @@ class User(Base, BaseUUIDMixin, BaseTimeMixin):
     password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_verificate: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    role: Mapped[Role] = mapped_column(Integer, default=0, nullable=False)
+    role: Mapped[Role] = mapped_column(Integer, default=2, nullable=False)
 
 
 class RefreshToken(Base, BaseUUIDMixin):
