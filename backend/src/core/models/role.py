@@ -6,3 +6,4 @@ from enum import Enum
 class Role(int, Enum):
     USER = 0
     ADMIN = 1
+    #  ANALYST = 2
