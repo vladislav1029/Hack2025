@@ -69,6 +69,33 @@ class Project(Base, BaseUUIDMixin, BaseTimeMixin):
         "ProjectPrediction", back_populates="project", cascade="all, delete-orphan"
     )
 
+    organization_name: Mapped[str] = mapped_column(String, nullable=False)
+    payment_type_id: Mapped[PyUUID] = mapped_column(
+        ForeignKey("payment_types.oid"), nullable=True
+    )
+    business_segment_id: Mapped[PyUUID] = mapped_column(
+        ForeignKey("business_segments.oid"), nullable=True
+    )
+    implementation_year: Mapped[int] = mapped_column(nullable=True)  # Год реализации
+
+    # Флаги
+    is_industry_solution: Mapped[bool] = mapped_column(default=False)
+    is_forecast_accepted: Mapped[bool] = mapped_column(default=False)
+    is_dzo_implementation: Mapped[bool] = mapped_column(default=False)
+    requires_management_control: Mapped[bool] = mapped_column(default=False)
+
+    # Условные поля
+    accepted_for_evaluation_id: Mapped[PyUUID] = mapped_column(
+        ForeignKey("evaluation_types.oid"), nullable=True
+    )
+    industry_manager: Mapped[str] = mapped_column(String, nullable=True)
+    project_number: Mapped[str] = mapped_column(String, nullable=True)
+
+    # Дополнительная информация
+    current_status: Mapped[str] = mapped_column(Text, nullable=True)
+    completed_this_period: Mapped[str] = mapped_column(Text, nullable=True)
+    plans_next_period: Mapped[str] = mapped_column(Text, nullable=True)
+
 
 class Stage(Base, BaseUUIDMixin):
 
@@ -101,6 +128,16 @@ class FinancialPeriod(Base, BaseUUIDMixin, BaseTimeMixin):
     # Связи
     project: Mapped["Project"] = relationship(
         "Project", back_populates="financialperiods"
+    )
+
+    revenue_status_id: Mapped[PyUUID] = mapped_column(
+        ForeignKey("revenue_status.oid"), nullable=True
+    )
+    cost_type_id: Mapped[PyUUID] = mapped_column(
+        ForeignKey("cost_types.oid"), nullable=True
+    )
+    cost_status_id: Mapped[PyUUID] = mapped_column(
+        ForeignKey("cost_status.oid"), nullable=True
     )
 
 
@@ -181,3 +218,32 @@ class ProjectPrediction(Base, BaseUUIDMixin, BaseTimeMixin):
 
     # Связи
     project: Mapped["Project"] = relationship("Project", back_populates="predictions")
+
+
+class Stage(Base, BaseUUIDMixin):
+    stage_name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    probability: Mapped[Decimal] = mapped_column(nullable=False)
+
+
+class PaymentType(Base, BaseUUIDMixin):
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+
+
+class BusinessSegment(Base, BaseUUIDMixin):
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+
+
+class EvaluationType(Base, BaseUUIDMixin):  # Принимаемый к оценке
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+
+
+class CostType(Base, BaseUUIDMixin):  # Вид затрат
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+
+
+class RevenueStatus(Base, BaseUUIDMixin):  # Статус начисления выручки
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+
+
+class CostStatus(Base, BaseUUIDMixin):  # Статус отражения затрат
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
