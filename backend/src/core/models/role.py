@@ -7,3 +7,4 @@ class Role(int, Enum):
     USER = 2
     MANAGER = 1
     ADMIN = 0
+
