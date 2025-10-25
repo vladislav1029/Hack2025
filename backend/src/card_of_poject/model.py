@@ -4,19 +4,16 @@ from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
 from uuid import uuid4, UUID as PyUUID
 
-from pytz import timezone
+from datetime import timezone
 from sqlalchemy import (
     JSON,
-    UUID,
     ForeignKey,
     Integer,
     String,
     Text,
     Date,
-    # JSON,
     TIMESTAMP,
     UniqueConstraint,
-    func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
