@@ -16,7 +16,6 @@ router = APIRouter(prefix="/comments", tags=["Comments"])
 @router.post(
     "/",
     response_model=CommentResponse,
-    dependencies=[Depends(require_role(Role.MANAGER))],
 )
 async def create_comment(
     comment: CommentCreate,
@@ -54,7 +53,7 @@ async def list_comments(
     return comments
 
 
-@router.delete("/{comment_id}", dependencies=[Depends(require_role(Role.MANAGER))])
+@router.delete("/{comment_id}")
 async def delete_comment(
     comment_id: PyUUID,
     session: AsyncSession = Depends(get_session),

@@ -1,16 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from repository import ProjectRepository, StageRepository
-from schemas import (
-    ProjectCreate,
-    ProjectUpdate,
-    ProjectResponse,
-    ProjectRegistryResponse,
-    AnalyticsResponse,
-)
+from fastapi import APIRouter
 from src.core.auth.current import DepCurrentUser
 from models import Project, Stage
-from database import get_async_session
 from core.models.role import Role
 from uuid import UUID as PyUUID
 from typing import List, Optional
