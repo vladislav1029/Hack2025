@@ -46,7 +46,7 @@ class CRUDRepository(AbstractRepository[Entity]):
 
     async def add(self, instance: Entity) -> Entity:
         self.session.add(instance)
-        await self.session.flush()  # Чтобы получить ID сразу
+        await self.session.commit()  # Чтобы получить ID сразу
         await self.session.refresh(instance)
         return instance
 

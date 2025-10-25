@@ -54,10 +54,10 @@ from src.dependency import (
     DepServiceRep,
     DepStageRep,
 )
-
+from structlog import get_logger
 router = APIRouter(prefix="/references", tags=["References"])
 
-
+log= get_logger(__name__)
 @router.post(
     "/stages",
     response_model=StageResponse,
@@ -71,6 +71,7 @@ async def create_stage(
     if user_role != Role.ADMIN:
         raise InsufficientResourcesError()
     oid = uuid4()
+    log.debug(f"Creating stage {stage.model_dump()},\n")
     stage_data = Stage(oid=oid, **stage.model_dump())
     created_stage = await repo_stage.add(stage_data)
     return created_stage

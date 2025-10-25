@@ -45,7 +45,7 @@ class BaseRepository(AbstractRepository[Entity], Generic[Entity]):
 
     async def add(self, entity: Entity) -> Entity:
         self.session.add(entity)
-        await self.session.flush()
+        await self.session.commit()
         await self.session.refresh(entity)
         return entity
 
