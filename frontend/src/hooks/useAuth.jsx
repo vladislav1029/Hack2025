@@ -148,6 +148,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    localStorage.setItem('logging_out', 'true'); // Flag to prevent interceptor redirect
     try {
       await authAPI.logout();
     } catch (error) {
@@ -157,6 +158,7 @@ export const AuthProvider = ({ children }) => {
       // Clear local storage and state
       localStorage.removeItem('access_token');
       localStorage.removeItem('token_type');
+      localStorage.removeItem('logging_out');
       setUser(null);
       setError(null);
     }
