@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Dict, TypeVar, Generic, Union, Type, List, Optional
 from uuid import UUID as PyUUID
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import func, select, delete
+from sqlalchemy import func, select, delete, update
 from abc import ABC, abstractmethod
 
 from structlog import get_logger
@@ -11,7 +11,7 @@ from src.card_of_poject.model import (
     ProjectPrediction,
     Report,
 )
-from src.core.exceptions import ResourceAlreadyExistsError
+from src.core.exceptions import ResourceAlreadyExistsError, ResourceNotFoundError
 from src.models import Base
 
 Entity = TypeVar("Entity", bound=Base)
@@ -32,6 +32,10 @@ class AbstractRepository(ABC, Generic[Entity]):
 
     @abstractmethod
     async def get(self, id: IDType) -> Optional[Entity]:
+        pass
+
+    @abstractmethod
+    async def update(self, id: IDType, entity: Entity) -> Entity:
         pass
 
     @abstractmethod
@@ -68,6 +72,25 @@ class BaseRepository(AbstractRepository[Entity], Generic[Entity]):
         query = delete(self.model).where(self.model.oid == id)
         await self.session.execute(query)
         await self.session.flush()
+
+    async def update(self, id: IDType, entity: Entity) -> Entity:
+        # Проверяем, существует ли запись
+        existing_entity = await self.get(id)
+        if not existing_entity:
+            raise ResourceNotFoundError()
+        # Формируем данные для обновления
+        values = entity.model_dump(exclude_unset=True)
+        query = (
+            update(self.model)
+            .where(self.model.oid == id)
+            .values(**values)
+            .execution_options(synchronize_session="fetch")
+        )
+        await self.session.execute(query)
+        await self.session.commit()
+        # Обновляем объект в сессии
+        await self.session.refresh(existing_entity)
+        return existing_entity
 
 
 # -------------------------------------------------------------------

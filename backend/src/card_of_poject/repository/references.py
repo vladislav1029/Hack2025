@@ -16,7 +16,10 @@ from src.card_of_poject.repository.base_repository import BaseRepository, IDType
 
 
 class StageRepository(BaseRepository[Stage]):
-    pass
+    async def get_by_name(self, name: str) -> Stage | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class ServiceRepository(BaseRepository[Service]):

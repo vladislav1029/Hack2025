@@ -39,6 +39,7 @@ from src.core.auth.current import DepCurrentUser
 from src.core.auth.models import User
 from src.core.exceptions import (
     InsufficientPermissionsError,
+    ResourceAlreadyExistsError,
     ResourceNotFoundError,
     UserNotFoundError,
 )
@@ -55,9 +56,12 @@ from src.dependency import (
     DepStageRep,
 )
 from structlog import get_logger
+
 router = APIRouter(prefix="/references", tags=["References"])
 
-log= get_logger(__name__)
+log = get_logger(__name__)
+
+
 @router.post(
     "/stages",
     response_model=StageResponse,
@@ -70,6 +74,8 @@ async def create_stage(
     user_id, user_role = user_model
     if user_role != Role.ADMIN:
         raise InsufficientResourcesError()
+    if not await repo_stage.get_by_name(stage.name):
+        raise ResourceAlreadyExistsError()
     oid = uuid4()
     log.debug(f"Creating stage {stage.model_dump()},\n")
     stage_data = Stage(oid=oid, **stage.model_dump())
@@ -98,11 +104,10 @@ async def update_stage(
     user_id, user_role = user_model
     if user_role != Role.ADMIN:
         raise InsufficientResourcesError()
-    service = await repo_stage.get(stage_id)
-    if not service:
-        raise ResourceNotFoundError()
-    update_model = Stage(oid=service.oid, **new_stage.model_dump(exclude_unset=True))
-    update_services = await repo_stage.add(update_model)
+
+    update_services = await repo_stage.update(
+        stage_id, **new_stage.model_dump(exclude_unset=True)
+    )
     return update_services
 
 
