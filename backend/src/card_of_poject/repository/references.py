@@ -1,5 +1,9 @@
+from typing import List
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from backend.src.card_of_poject.model import (
     BusinessSegment,
+    Comment,
     CostStatus,
     CostType,
     EvaluationType,
@@ -8,7 +12,7 @@ from backend.src.card_of_poject.model import (
     Service,
     Stage,
 )
-from backend.src.card_of_poject.repository.base_repository import BaseRepository
+from backend.src.card_of_poject.repository.base_repository import BaseRepository, IDType
 
 
 class StageRepository(BaseRepository[Stage]):
