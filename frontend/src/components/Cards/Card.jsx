@@ -1,7 +1,13 @@
 import React from 'react';
 import styles from './Card.module.css';
 
-const Card = ({ title, subtitle, price, deliveryTime, buttonText = '-', onButtonClick }) => {
+const Card = ({ title, subtitle, price, deliveryTime, buttonText = '-', onButtonClick, onExpand, isExpanded = false }) => {
+  const handleExpandClick = () => {
+    if (onExpand) {
+      onExpand();
+    }
+  };
+
   if (!title && !subtitle && !price && !deliveryTime) {
     // Empty card with only plus button
     return (
@@ -16,10 +22,12 @@ const Card = ({ title, subtitle, price, deliveryTime, buttonText = '-', onButton
   }
 
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${isExpanded ? styles.expanded : ''}`}>
       <div className={styles.cardHeader}>
         <h3 className={styles.title}>{title}</h3>
-        <span className={styles.dropdownIcon}>▼</span>
+        <button className={styles.threeDotBtn} onClick={handleExpandClick}>
+          ⋮
+        </button>
       </div>
       <p className={styles.subtitle}>{subtitle}</p>
       <div className={styles.priceSection}>
@@ -29,6 +37,26 @@ const Card = ({ title, subtitle, price, deliveryTime, buttonText = '-', onButton
         </button>
       </div>
       <p className={styles.deliveryTime}>{deliveryTime}</p>
+      {isExpanded && (
+        <div className={styles.expandedContent}>
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Описание:</span>
+            <span className={styles.detailValue}>Подробное описание проекта {title} с дополнительными характеристиками и требованиями.</span>
+          </div>
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Категория:</span>
+            <span className={styles.detailValue}>{subtitle}</span>
+          </div>
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Сложность:</span>
+            <span className={styles.detailValue}>Средняя</span>
+          </div>
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Технологии:</span>
+            <span className={styles.detailValue}>React, Node.js, MongoDB</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

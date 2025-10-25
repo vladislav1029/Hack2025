@@ -1,17 +1,18 @@
 .card {
-  background: #2c2c2c;
-  border-radius: 16px;
+  background: white;
+  border-radius: 12px;
   padding: 20px;
-  color: white;
+  color: #333;
   position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e5e5;
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .cardHeader {
@@ -25,16 +26,12 @@
   font-size: 18px;
   font-weight: bold;
   margin: 0;
-}
-
-.dropdownIcon {
-  font-size: 14px;
-  color: #888;
+  color: #004B87;
 }
 
 .subtitle {
   font-size: 14px;
-  color: #bbb;
+  color: #6b7280;
   margin: 0 0 15px 0;
 }
 
@@ -71,7 +68,7 @@
 
 .deliveryTime {
   font-size: 12px;
-  color: #bbb;
+  color: #9ca3af;
   margin: 0;
 }
 
@@ -85,4 +82,72 @@
 
 .emptyCardWrapper {
   opacity: 0.3;
+}
+
+.threeDotBtn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.threeDotBtn:hover {
+  background-color: #f3f4f6;
+  color: #004B87;
+}
+
+.expanded {
+  transform: none;
+}
+
+.expandedContent {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+  animation: expandAnim 0.3s ease-out;
+}
+
+@keyframes expandAnim {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.detailRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.detailRow:last-child {
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 14px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.detailValue {
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.4;
 }

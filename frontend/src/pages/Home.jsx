@@ -9,62 +9,71 @@ import './Home.css';
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [expandedCards, setExpandedCards] = useState(new Set());
   const [cards, setCards] = useState([
     {
       id: 1,
       title: 'Inter Pro',
       subtitle: 'Passeel, On rglame',
       price: '9590',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-15')
     },
     {
       id: 2,
       title: 'Inter Pro',
       subtitle: 'Emerges, Fn rglame',
       price: '3990',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-20')
     },
     {
       id: 3,
       title: 'SFor Pro',
       subtitle: 'Passeel, Fn rglame',
       price: '7990',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-10')
     },
     {
       id: 4,
       title: 'Inter Pro',
       subtitle: 'Emsbee, Fn rglame',
       price: '3990',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-25')
     },
     {
       id: 5,
       title: 'Inter Pro',
       subtitle: 'Daasseel, Fn rglame',
       price: '5990',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-12')
     },
     {
       id: 6,
       title: 'Sliject Pro',
       subtitle: 'Dmer nge, Fn rglame',
       price: '5990',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-18')
     },
     {
       id: 7,
       title: 'Inter Pro',
       subtitle: 'Passeel, On rglame',
       price: '9590',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-08')
     },
     {
       id: 8,
       title: 'Inter Pro',
       subtitle: 'Emerges, Fn rglame',
       price: '3990',
-      deliveryTime: 'Estimated Delivery Time'
+      deliveryTime: 'Estimated Delivery Time',
+      date: new Date('2025-01-22')
     },
     {
       id: 9,
@@ -94,6 +103,18 @@ const Home = () => {
     setCards(prevCards => prevCards.filter(card => card.id !== cardId));
   };
 
+  const handleCardExpand = (cardId) => {
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
+
   return (
     <div className="homePage">
       <div className="container">
@@ -119,6 +140,8 @@ const Home = () => {
                   deliveryTime={card.deliveryTime}
                   buttonText="-"
                   onButtonClick={() => handleDeleteCard(card.id)}
+                  onExpand={() => handleCardExpand(card.id)}
+                  isExpanded={expandedCards.has(card.id)}
                 />
               )
             ))}
