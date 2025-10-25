@@ -4,15 +4,20 @@ from uuid import UUID as PyUUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import func, select, delete
 from abc import ABC, abstractmethod
+
+from structlog import get_logger
 from src.card_of_poject.model import (
     Dashboard,
     ProjectPrediction,
     Report,
 )
+from src.core.exceptions import ResourceAlreadyExistsError
 from src.models import Base
 
 Entity = TypeVar("Entity", bound=Base)
 IDType = Union[int, PyUUID]
+
+log = get_logger(__name__)
 
 
 class AbstractRepository(ABC, Generic[Entity]):
@@ -44,6 +49,9 @@ class BaseRepository(AbstractRepository[Entity], Generic[Entity]):
         self.model = model
 
     async def add(self, entity: Entity) -> Entity:
+        log.info(f"Попытка создать сущность с oid = {entity.oid} и объектом {entity}.")
+        if not self.get(entity.oid):
+            return ResourceAlreadyExistsError()
         self.session.add(entity)
         await self.session.commit()
         await self.session.refresh(entity)
