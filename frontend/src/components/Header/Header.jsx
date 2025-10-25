@@ -25,8 +25,7 @@ const Header = () => {
         <div className={styles.header__content}>
           {/* Логотип */}
           <div className={styles.header__logo}>
-            <div className={styles.logoIcon}>N</div>
-            <span className={styles.logoText}>Adabe Ab</span>
+            <img src="/logo.png" alt="Adabe Logo" className={styles.logoImage} />
           </div>
 
           {/* Действия */}
