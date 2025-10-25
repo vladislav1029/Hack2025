@@ -33,9 +33,10 @@ async def command():
                 role=Role.ADMIN,
                 is_active=True,
                 is_verificate=True,
-                create_at=datetime.now(timezone.utc),
+                created_at=datetime.now(timezone.utc),
+                update_at = None
             )
-            await session.add(admin_user)
+            session.add(admin_user)
             await session.commit()
             log.info("Админ создан!!!")
         else:
