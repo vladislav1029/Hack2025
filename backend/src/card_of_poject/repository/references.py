@@ -23,32 +23,52 @@ class StageRepository(BaseRepository[Stage]):
 
 
 class ServiceRepository(BaseRepository[Service]):
-    pass
+    async def get_by_name(self, name: str) -> Service | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class PaymentTypeRepository(BaseRepository[PaymentType]):
-    pass
+    async def get_by_name(self, name: str) -> PaymentType | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class BusinessSegmentRepository(BaseRepository[BusinessSegment]):
-    pass
+    async def get_by_name(self, name: str) -> BusinessSegment | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class EvaluationTypeRepository(BaseRepository[EvaluationType]):
-    pass
+    async def get_by_name(self, name: str) -> EvaluationType | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class CostTypeRepository(BaseRepository[CostType]):
-    pass
+    async def get_by_name(self, name: str) -> CostType | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class RevenueStatusRepository(BaseRepository[RevenueStatus]):
-    pass
+    async def get_by_name(self, name: str) -> RevenueStatus | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 
 class CostStatusRepository(BaseRepository[CostStatus]):
-    pass
-
+    async def get_by_name(self, name: str) -> CostStatus | None:
+        qwery = select(self.model).where(self.model.name == name)
+        result = await self.session.execute(qwery)
+        return result.scalars().first()
 
 class CommentRepository(BaseRepository[Comment]):
     async def list_for_project(self, project_id: IDType) -> List[Comment]:
