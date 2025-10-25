@@ -21,6 +21,20 @@ from typing import Annotated
 from fastapi import Depends, Request
 from minio import Minio
 
+from src.card_of_poject.model import (
+    BusinessSegment,
+    Comment,
+    CostStatus,
+    CostType,
+    EvaluationType,
+    FinancialPeriod,
+    PaymentType,
+    Project,
+    ProjectHistory,
+    RevenueStatus,
+    Service,
+    Stage,
+)
 from src.card_of_poject.repository import (
     FinancialPeriodRepository,
     StageRepository,
@@ -105,61 +119,61 @@ DepTokenRep = Annotated[TokenRepository, Depends(get_token_repository)]
 async def get_financial_period_repository(
     session: AsyncSessionDep,
 ) -> FinancialPeriodRepository:
-    return FinancialPeriodRepository(session)
+    return FinancialPeriodRepository(session, model=FinancialPeriod)
 
 
 async def get_project_history_repository(
     session: AsyncSessionDep,
 ) -> ProjectHistoryRepository:
-    return ProjectHistoryRepository(session)
+    return ProjectHistoryRepository(session, model=ProjectHistory)
 
 
 async def get_project_repository(session: AsyncSessionDep) -> ProjectRepository:
-    return ProjectRepository(session)
+    return ProjectRepository(session, model=Project)
 
 
 async def get_stage_repository(session: AsyncSessionDep) -> StageRepository:
-    return StageRepository(session)
+    return StageRepository(session, model=Stage)
 
 
 async def get_comment_repository(session: AsyncSessionDep) -> CommentRepository:
-    return CommentRepository(session)
+    return CommentRepository(session, model=Comment)
 
 
 async def get_service_repository(session: AsyncSessionDep) -> ServiceRepository:
-    return ServiceRepository(session)
+    return ServiceRepository(session, model=Service)
 
 
 async def get_cost_type_repository(session: AsyncSessionDep) -> CostTypeRepository:
-    return CostTypeRepository(session)
+    return CostTypeRepository(session, model=CostType)
 
 
 async def get_cost_status_repository(session: AsyncSessionDep) -> CostStatusRepository:
-    return CostStatusRepository(session)
+    return CostStatusRepository(session, model=CostStatus)
 
 
 async def get_revenue_status_repository(
     session: AsyncSessionDep,
 ) -> RevenueStatusRepository:
-    return RevenueStatusRepository(session)
+    return RevenueStatusRepository(session, model=RevenueStatus)
 
 
 async def get_payment_type_repository(
     session: AsyncSessionDep,
 ) -> PaymentTypeRepository:
-    return PaymentTypeRepository(session)
+    return PaymentTypeRepository(session, model=PaymentType)
 
 
 async def get_evaluation_type_repository(
     session: AsyncSessionDep,
 ) -> EvaluationTypeRepository:
-    return EvaluationTypeRepository(session)
+    return EvaluationTypeRepository(session, model=EvaluationType)
 
 
 async def get_business_segment_repository(
     session: AsyncSessionDep,
 ) -> BusinessSegmentRepository:
-    return BusinessSegmentRepository(session)
+    return BusinessSegmentRepository(session, model=BusinessSegment)
 
 
 # === Зависимости для DI ===
