@@ -71,7 +71,7 @@ class BaseRepository(AbstractRepository[Entity], Generic[Entity]):
     async def delete(self, id: IDType) -> None:
         query = delete(self.model).where(self.model.oid == id)
         await self.session.execute(query)
-        await self.session.flush()
+        await self.session.commit()
 
     async def update(self, id: IDType, entity: Entity) -> Entity:
         # Проверяем, существует ли запись
