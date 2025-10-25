@@ -74,7 +74,7 @@ async def create_stage(
     user_id, user_role = user_model
     if user_role != Role.ADMIN:
         raise InsufficientResourcesError()
-    if not await repo_stage.get_by_name(stage.name):
+    if  await repo_stage.get_by_name(stage.name):
         raise ResourceAlreadyExistsError()
     oid = uuid4()
     log.debug(f"Creating stage {stage.model_dump()},\n")
@@ -106,7 +106,7 @@ async def update_stage(
         raise InsufficientResourcesError()
 
     update_services = await repo_stage.update(
-        stage_id, **new_stage.model_dump(exclude_unset=True)
+        stage_id, new_stage
     )
     return update_services
 
