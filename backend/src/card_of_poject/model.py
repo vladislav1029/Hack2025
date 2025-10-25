@@ -7,8 +7,10 @@ from uuid import UUID as PyUUID
 from sqlalchemy import (
     JSON,
     UUID,
+    Boolean,
     ForeignKey,
     Integer,
+    Numeric,
     String,
     Text,
     Date,
