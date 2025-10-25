@@ -25,8 +25,7 @@ const Header = () => {
         <div className={styles.header__content}>
           {/* Логотип */}
           <div className={styles.header__logo}>
-            <div className={styles.logoIcon}>N</div>
-            <span className={styles.logoText}>Adabe Ab</span>
+            <img src="/logo.png" alt="Adabe Logo" className={styles.logoImage} />
           </div>
 
           {/* Действия */}
@@ -34,7 +33,7 @@ const Header = () => {
             {isAuthenticated ? (
               <div className={styles.userMenu}>
                 <span className={styles.userInfo}>
-                  Welcome, {user?.email} ({user?.role === 0 ? 'User' : user?.role === 1 ? 'Moderator' : 'Admin'})
+                  Welcome, {user?.email} ({user?.role === 0 ? 'Administrator' : user?.role === 1 ? 'Manager' : 'User'})
                 </span>
                 <button className={styles.logoutBtn} onClick={handleLogout}>
                   Logout

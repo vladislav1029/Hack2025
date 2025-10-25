@@ -25,23 +25,10 @@
   gap: 12px;
 }
 
-.logoIcon {
-  width: 40px;
+.logoImage {
   height: 40px;
-  background: white;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 20px;
-  color: #2c2c2c;
-}
-
-.logoText {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
+  width: auto;
+  object-fit: contain;
 }
 
 .header__actions {
@@ -107,8 +94,8 @@
     padding: 10px 0;
   }
 
-  .logoText {
-    font-size: 20px;
+  .logoImage {
+    height: 35px;
   }
 
   .signInBtn {
@@ -137,13 +124,7 @@
     padding: 0 15px;
   }
 
-  .logoIcon {
-    width: 35px;
+  .logoImage {
     height: 35px;
-    font-size: 18px;
-  }
-
-  .logoText {
-    font-size: 18px;
   }
 }

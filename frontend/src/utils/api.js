@@ -1,4 +1,5 @@
 // API client for authentication and other backend operations
+import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8000'; // FastAPI backend URL
 
 class ApiError extends Error {
@@ -10,101 +11,124 @@ class ApiError extends Error {
   }
 }
 
-class ApiClient {
-  constructor(baseURL) {
-    this.baseURL = baseURL;
-  }
+// Create axios instance
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-  async request(endpoint, options = {}) {
-    const url = `${this.baseURL}${endpoint}`;
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    };
-
-    // Add JWT token if available
+// Add request interceptor to include JWT token
+axiosInstance.interceptors.request.use(
+  (config) => {
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
+// Add response interceptor for token refresh
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.skipAuthRefresh) {
+      // Check if user is logging out
+      if (localStorage.getItem('logging_out')) {
+        // Do not attempt refresh, just reject
+        return Promise.reject(error);
+      }
+      originalRequest._retry = true;
+      try {
+        const refreshResponse = await axios.post(`${API_BASE_URL}/account/refresh`);
+        const { access_token, token_type } = refreshResponse.data;
+        localStorage.setItem('access_token', access_token);
+        originalRequest.headers.Authorization = `${token_type.charAt(0).toUpperCase() + token_type.slice(1)} ${access_token}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+class ApiClient {
+  async login(username, password) {
     try {
-      const response = await fetch(url, config);
-
-      if (!response.ok) {
-        let errorMessage = `HTTP error! status: ${response.status}`;
-        let errorDetails = null;
-
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.detail || errorMessage;
-          errorDetails = errorData;
-        } catch (e) {
-          // If response is not JSON, use status text
-          errorMessage = response.statusText || errorMessage;
-        }
-
-        throw new ApiError(errorMessage, response.status, errorDetails);
-      }
-
-      // Handle empty responses
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        return await response.json();
-      }
-
-      return await response.text();
+      const response = await axiosInstance.post('/account/login', new URLSearchParams({
+        username,
+        password,
+        grant_type: 'password'
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      return response.data;
     } catch (error) {
-      if (error instanceof ApiError) {
-        throw error;
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
       }
-
-      // Network or other errors
-      throw new ApiError(
-        `Network error: ${error.message}`,
-        0,
-        { originalError: error }
-      );
+      throw new ApiError(error.message, error.response?.status || 0);
     }
   }
 
-  // Authentication methods
-  async login(username, password) {
-    const formData = new URLSearchParams();
-    formData.append('username', username);
-    formData.append('password', password);
-
-    return this.request('/account/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData,
-    });
-  }
-
   async register(email, password) {
-    return this.request('/account/', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await axiosInstance.post('/account/', { email, password });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
   async getCurrentUser() {
-    return this.request('/account/me');
+    try {
+      const response = await axiosInstance.get('/account/me');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
   async logout() {
-    return this.request('/account/logout', {
-      method: 'POST',
-    });
+    try {
+      const response = await axiosInstance.post('/account/logout', {}, {
+        skipAuthRefresh: true, // Skip auth refresh interceptor for logout
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
   async refreshToken() {
-    return this.request('/account/refresh');
+    try {
+      const response = await axiosInstance.get('/account/refresh');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
   // File operations (if needed)
@@ -114,25 +138,55 @@ class ApiClient {
 
     const endpoint = isPrivate ? '/private/upload' : '/file/upload';
 
-    return this.request(endpoint, {
-      method: 'POST',
-      headers: {}, // Let browser set Content-Type for FormData
-      body: formData,
-    });
+    try {
+      const response = await axiosInstance.post(endpoint, formData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
   async getFileList(isPrivate = false) {
     const endpoint = isPrivate ? '/private/list' : '/file/list';
-    return this.request(endpoint);
+    try {
+      const response = await axiosInstance.get(endpoint);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
-  async getFileLink(filename, isPrivate = false) {
-    const endpoint = isPrivate ? `/private/link/${filename}` : `/file/link/${filename}`;
-    return this.request(endpoint);
+  async getFileLink(filename, isPrivate = true) {
+    if (!isPrivate) {
+      throw new Error('Public files do not support temporary download links');
+    }
+    try {
+      const response = await axiosInstance.get(`/private/link/${filename}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 
   async downloadFile(tempLink) {
-    return this.request(`/private/download/${tempLink}`);
+    try {
+      const response = await axiosInstance.get(`/private/download/${tempLink}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
   }
 }
 
