@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import func, select, delete
 from sqlalchemy.orm import selectinload
 from abc import ABC, abstractmethod
-from backend.src.card_of_poject.model import (
+from src.card_of_poject.model import (
     Comment,
     Dashboard,
     FinancialPeriod,

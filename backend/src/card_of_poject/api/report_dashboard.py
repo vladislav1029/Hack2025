@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.src.core.auth.current import get_current_user
+from src.core.auth.current import get_current_user
 from repository import ReportRepository, DashboardRepository
 from schemas import ReportCreate, ReportResponse, DashboardCreate, DashboardResponse
 from models import Report, Dashboard, Role
@@ -9,7 +9,8 @@ from typing import List
 from models import User
 from database import get_session
 from core.models.role import Role
-from dependencies import require_role
+
+# from dependencies import require_role
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 

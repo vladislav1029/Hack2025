@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.src.core.auth.current import get_current_user
+from src.core.auth.current import get_current_user
 from repository import CommentRepository, ProjectRepository
 from schemas import CommentCreate, CommentResponse
 from models import Comment, Project

@@ -8,6 +8,7 @@ from schemas import (
     ProjectRegistryResponse,
     AnalyticsResponse,
 )
+from src.core.auth.current import DepCurrentUser
 from models import Project, Stage
 from database import get_async_session
 from core.models.role import Role

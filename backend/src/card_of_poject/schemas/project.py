@@ -3,7 +3,7 @@ from uuid import UUID as PyUUID
 from typing import Optional, List, Dict, Union
 from datetime import datetime
 
-from backend.src.card_of_poject.schemas.base import ReferenceResponse
+from src.card_of_poject.schemas.base import ReferenceResponse
 from .references import StageResponse, ServiceResponse, BusinessSegmentResponse
 from repository.financila import FinancialPeriodResponse
 from repository.history import ProjectHistoryResponse

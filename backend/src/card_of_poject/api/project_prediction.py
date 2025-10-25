@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.src.core.auth.current import get_current_user
+from src.core.auth.current import get_current_user
 from repository import ProjectPredictionRepository, ProjectRepository
 from schemas import ProjectPredictionCreate, ProjectPredictionResponse
 from models import ProjectPrediction, Project, Role

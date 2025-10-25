@@ -6,15 +6,14 @@ from uuid import UUID as PyUUID
 
 from sqlalchemy import (
     JSON,
-    UUID,
+    Boolean,
+    Date,
     ForeignKey,
     Integer,
     String,
     Text,
-    Date,
-    # JSON,
     TIMESTAMP,
-    UniqueConstraint,
+    Numeric,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship

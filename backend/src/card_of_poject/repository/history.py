@@ -4,7 +4,7 @@ from typing import List, Optional, Dict
 from uuid import UUID as PyUUID
 from sqlalchemy.orm import selectinload
 from sqlalchemy import select
-from backend.src.card_of_poject.repository.base_repository import BaseRepository
+from src.card_of_poject.repository.base_repository import BaseRepository
 
 
 class ProjectHistoryRepository(BaseRepository[ProjectHistory]):

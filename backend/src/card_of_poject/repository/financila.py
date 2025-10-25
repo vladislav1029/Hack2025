@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from backend.src.card_of_poject.repository.base_repository import BaseRepository
+from src.card_of_poject.repository.base_repository import BaseRepository
 from models import FinancialPeriod, RevenueStatus, CostType, CostStatus
 from typing import Dict, List, Optional
 from uuid import UUID as PyUUID
