@@ -17,7 +17,7 @@ from src.core.exceptions import ExternalServiceError
 from src.core.minio.handler import MinioHandler
 from structlog import get_logger
 
-from src.core.reposiory import UserRepository
+from src.core.repository import UserRepository
 from src.database import AsyncSessionDep
 
 log = get_logger()

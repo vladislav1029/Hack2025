@@ -12,7 +12,7 @@ from structlog import get_logger
 from src.config import settings
 from src.core.exceptions import ResourceNotFoundError
 from src.core.minio.utils import make_s3_safe_filename
-from src.dependensy import DepPrivateMinioHand
+from src.dependency import DepPrivateMinioHand
 
 log = get_logger()
 

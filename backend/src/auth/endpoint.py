@@ -13,7 +13,7 @@ from src.auth.schemas import (
 from src.core.auth.current import DepCurrentUser
 from src.core.auth.dto import TokenRefreshDict
 from src.core.models.role import Role
-from src.dependensy import DepJwtHandler, DepPasswordHasher, DepTokenRep, DepUserRep
+from src.dependency import DepJwtHandler, DepPasswordHasher, DepTokenRep, DepUserRep
 from src.core.auth.models import User
 from src.core.exceptions import (
     InvalidInputError,
