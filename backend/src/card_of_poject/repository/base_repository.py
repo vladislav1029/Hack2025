@@ -49,9 +49,6 @@ class BaseRepository(AbstractRepository[Entity], Generic[Entity]):
         self.model = model
 
     async def add(self, entity: Entity) -> Entity:
-        log.info(f"Попытка создать сущность с oid = {entity.oid} и объектом {entity}.")
-        if not self.get(entity.oid):
-            return ResourceAlreadyExistsError()
         self.session.add(entity)
         await self.session.commit()
         await self.session.refresh(entity)
