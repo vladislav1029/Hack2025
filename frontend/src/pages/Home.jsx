@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import Card from '../components/Cards/Card';
+import Modal from '../components/Modal/Modal';
 import Filter from '../components/Filter/Filter';
 import './Home.css';
 
 const Home = () => {
-  const cards = [
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [cards, setCards] = useState([
     {
       id: 1,
       title: 'Inter Pro',
@@ -60,8 +65,34 @@ const Home = () => {
       subtitle: 'Emerges, Fn rglame',
       price: '3990',
       deliveryTime: 'Estimated Delivery Time'
+    },
+    {
+      id: 9,
+      title: '',
+      subtitle: '',
+      price: '',
+      deliveryTime: ''
     }
-  ];
+  ]);
+
+  const onSubmit = (data) => {
+    // Add new card to the list
+    const newCard = {
+      id: Date.now(), // Use timestamp as unique ID
+      title: data.title,
+      subtitle: data.subtitle,
+      price: data.price.toString(),
+      deliveryTime: data.deliveryTime
+    };
+    setCards(prevCards => [...prevCards.filter(card => card.title !== ''), newCard]); // Remove empty cards and add new one
+    console.log(data);
+    toast.success('Project created successfully!');
+    setIsModalOpen(false);
+  };
+
+  const handleDeleteCard = (cardId) => {
+    setCards(prevCards => prevCards.filter(card => card.id !== cardId));
+  };
 
   return (
     <div className="homePage">
@@ -69,13 +100,27 @@ const Home = () => {
         <div className="content">
           <div className="cardsGrid">
             {cards.map(card => (
-              <Card
-                key={card.id}
-                title={card.title}
-                subtitle={card.subtitle}
-                price={card.price}
-                deliveryTime={card.deliveryTime}
-              />
+              card.title === '' ? (
+                <Card
+                  key={card.id}
+                  title={card.title}
+                  subtitle={card.subtitle}
+                  price={card.price}
+                  deliveryTime={card.deliveryTime}
+                  buttonText="+"
+                  onButtonClick={() => setIsModalOpen(true)}
+                />
+              ) : (
+                <Card
+                  key={card.id}
+                  title={card.title}
+                  subtitle={card.subtitle}
+                  price={card.price}
+                  deliveryTime={card.deliveryTime}
+                  buttonText="-"
+                  onButtonClick={() => handleDeleteCard(card.id)}
+                />
+              )
             ))}
           </div>
           <div className="filterContainer">
@@ -83,6 +128,55 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="modalContent">
+          <h1>Create New Project</h1>
+          <form onSubmit={handleSubmit(onSubmit)} className="createProjectForm">
+            <div className="formGroup">
+              <label htmlFor="title">Title</label>
+              <input
+                id="title"
+                {...register('title', { required: 'Title is required' })}
+                placeholder="Enter project title"
+              />
+              {errors.title && <span className="error">{errors.title.message}</span>}
+            </div>
+
+            <div className="formGroup">
+              <label htmlFor="subtitle">Subtitle</label>
+              <input
+                id="subtitle"
+                {...register('subtitle', { required: 'Subtitle is required' })}
+                placeholder="Enter project subtitle"
+              />
+              {errors.subtitle && <span className="error">{errors.subtitle.message}</span>}
+            </div>
+
+            <div className="formGroup">
+              <label htmlFor="price">Price</label>
+              <input
+                id="price"
+                type="number"
+                {...register('price', { required: 'Price is required', min: { value: 0, message: 'Price must be positive' } })}
+                placeholder="Enter price"
+              />
+              {errors.price && <span className="error">{errors.price.message}</span>}
+            </div>
+
+            <div className="formGroup">
+              <label htmlFor="deliveryTime">Delivery Time</label>
+              <input
+                id="deliveryTime"
+                {...register('deliveryTime', { required: 'Delivery time is required' })}
+                placeholder="Enter estimated delivery time"
+              />
+              {errors.deliveryTime && <span className="error">{errors.deliveryTime.message}</span>}
+            </div>
+
+            <button type="submit" className="submitBtn">&#10003;</button>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 };
