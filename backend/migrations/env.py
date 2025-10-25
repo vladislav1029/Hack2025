@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from src.models import Base
 from src.core.auth.models import User , RefreshToken
+from src.card_of_poject.model import *
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
