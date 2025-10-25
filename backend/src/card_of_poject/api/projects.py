@@ -1,10 +1,22 @@
+__all__ = ["router"]
 from fastapi import APIRouter
+from src.card_of_poject.model import Project
+from src.card_of_poject.schemas.project import (
+    AnalyticsResponse,
+    ProjectCreate,
+    ProjectRegistryResponse,
+    ProjectResponse,
+    ProjectUpdate,
+)
 from src.core.auth.current import DepCurrentUser
-from models import Project, Stage
-from core.models.role import Role
-from uuid import UUID as PyUUID
+
+from uuid import UUID as PyUUID, uuid4
 from typing import List, Optional
 from datetime import datetime
+
+from src.core.exceptions import InsufficientPermissionsError, ResourceNotFoundError
+from src.core.models.role import Role
+from src.dependency import DepProjectRep, DepStageRep
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
@@ -16,86 +28,95 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 async def create_project(
     project: ProjectCreate,
     user_data: DepCurrentUser,
-    session: AsyncSession = Depends(get_async_session),
+    project_repo: DepProjectRep,
+    stage_repo: DepStageRep,
 ):
-    repo = ProjectRepository(session, Project)
-    stage_repo = StageRepository(session, Stage)
+    user_id, user_role = user_data
+    if user_role != Role.ADMIN:
+        raise InsufficientPermissionsError()
     stage = await stage_repo.get(project.stage_id)
     if not stage:
-        raise HTTPException(status_code=404, detail="Stage not found")
-    project_data = Project(**project.dict())
+        raise ResourceNotFoundError()
+    oid = uuid4()
+    project_data = Project(oid=oid, **project.model_validate())
     project_data.probability = stage.probability
-    created_project = await repo.add(project_data)
+    created_project = await project_repo.add(project_data)
     return created_project
 
 
 @router.get(
     "/{project_id}",
     response_model=ProjectResponse,
-    dependencies=[Depends(require_role(Role.USER))],
 )
 async def get_project(
-    project_id: PyUUID, session: AsyncSession = Depends(get_async_session)
+    project_id: PyUUID,
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
 ):
-    repo = ProjectRepository(session, Project)
-    project = await repo.get(project_id)
+
+    project = await project_repo.get(project_id)
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise ResourceNotFoundError()
     return project
 
 
 @router.put(
     "/{project_id}",
     response_model=ProjectResponse,
-    dependencies=[Depends(require_role(Role.MANAGER))],
 )
 async def update_project(
     project_id: PyUUID,
+    user_data: DepCurrentUser,
     project: ProjectUpdate,
-    session: AsyncSession = Depends(get_async_session),
+    project_repo: DepProjectRep,
+    stage_repo: DepStageRep,
 ):
-    repo = ProjectRepository(session, Project)
-    stage_repo = StageRepository(session, Stage)
-    existing_project = await repo.get(project_id)
+    user_id, user_role = user_data
+    if user_role == Role.USER:
+        raise InsufficientPermissionsError()
+
+    existing_project = await project_repo.get(project_id)
     if not existing_project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    update_data = project.dict(exclude_unset=True)
+        raise ResourceNotFoundError()
+    update_data = project.model_dump(exclude_unset=True)
     if "stage_id" in update_data:
         stage = await stage_repo.get(update_data["stage_id"])
         if not stage:
-            raise HTTPException(status_code=404, detail="Stage not found")
+            raise ResourceNotFoundError()
         update_data["probability"] = stage.probability
     for key, value in update_data.items():
         setattr(existing_project, key, value)
-    updated_project = await repo.add(existing_project)
+    updated_project = await project_repo.add(existing_project)
     return updated_project
 
 
-@router.delete("/{project_id}", dependencies=[Depends(require_role(Role.MANAGER))])
+@router.delete("/{project_id}")
 async def delete_project(
-    project_id: PyUUID, session: AsyncSession = Depends(get_async_session)
+    project_id: PyUUID,
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
 ):
-    repo = ProjectRepository(session, Project)
-    project = await repo.get(project_id)
+    user_id, user_role = user_data
+    if user_role == Role.USER:
+        raise InsufficientPermissionsError()
+    project = await project_repo.get(project_id)
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    await repo.delete(project_id)
+        raise ResourceNotFoundError()
+    await project_repo.delete(project_id)
     return {"message": "Project deleted"}
 
 
 @router.get(
     "/",
     response_model=List[ProjectResponse],
-    dependencies=[Depends(require_role(Role.USER))],
 )
 async def list_projects(
+    project_repo: DepProjectRep,
     stage_id: Optional[PyUUID] = None,
     manager_id: Optional[PyUUID] = None,
     business_segment_id: Optional[PyUUID] = None,
     service_id: Optional[PyUUID] = None,
-    session: AsyncSession = Depends(get_async_session),
 ):
-    repo = ProjectRepository(session, Project)
     filters = {}
     if stage_id:
         filters["stage_id"] = stage_id
@@ -105,35 +126,35 @@ async def list_projects(
         filters["business_segment_id"] = business_segment_id
     if service_id:
         filters["service_id"] = service_id
-    projects = await repo.list(filters)
+    projects = await project_repo.list(filters)
     return projects
 
 
 @router.get(
     "/registry",
     response_model=List[ProjectRegistryResponse],
-    dependencies=[Depends(require_role(Role.USER))],
 )
 async def get_project_registry(
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
-    session: AsyncSession = Depends(get_async_session),
 ):
-    repo = ProjectRepository(session, Project)
-    registry = await repo.get_project_registry(start_date, end_date)
+
+    registry = await project_repo.get_project_registry(start_date, end_date)
     return registry
 
 
 @router.get(
     "/analytics",
     response_model=AnalyticsResponse,
-    dependencies=[Depends(require_role(Role.USER))],
 )
 async def get_analytics(
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
-    session: AsyncSession = Depends(get_async_session),
 ):
-    repo = ProjectRepository(session, Project)
-    analytics = await repo.get_analytics(start_date, end_date)
+
+    analytics = await project_repo.get_analytics(start_date, end_date)
     return analytics

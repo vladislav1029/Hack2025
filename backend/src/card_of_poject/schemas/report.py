@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 from uuid import UUID as PyUUID
-from typing import Optional, Dict
+from typing import  Dict
 from datetime import datetime
-from .references import ReferenceResponse
+
+from src.card_of_poject.schemas.base import ReferenceResponse
 
 
 class ReportBase(BaseModel):
@@ -21,7 +22,7 @@ class ReportResponse(ReportBase):
     creator: ReferenceResponse  # User.name
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class DashboardBase(BaseModel):
@@ -40,4 +41,4 @@ class DashboardResponse(DashboardBase):
     creator: ReferenceResponse
 
     class Config:
-        orm_mode = True
+        from_attributes = True

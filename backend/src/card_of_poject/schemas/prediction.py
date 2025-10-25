@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from uuid import UUID as PyUUID
-from typing import Optional
 from datetime import datetime
 
 
@@ -19,4 +18,4 @@ class ProjectPredictionResponse(ProjectPredictionBase):
     calculated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

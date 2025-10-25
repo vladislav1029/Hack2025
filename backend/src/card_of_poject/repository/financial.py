@@ -1,6 +1,6 @@
 from sqlalchemy import select
+from src.card_of_poject.model import FinancialPeriod
 from src.card_of_poject.repository.base_repository import BaseRepository
-from models import FinancialPeriod, RevenueStatus, CostType, CostStatus
 from typing import Dict, List, Optional
 from uuid import UUID as PyUUID
 from sqlalchemy.orm import selectinload

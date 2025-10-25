@@ -1,7 +1,7 @@
-from .base import ReferenceBase, ReferenceCreate, ReferenceResponse
-from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID as PyUUID
+
+from src.card_of_poject.schemas.base import ReferenceBase, ReferenceCreate, ReferenceResponse
 
 
 class StageBase(ReferenceBase):
@@ -16,7 +16,7 @@ class StageResponse(StageBase):
     oid: PyUUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # Остальные справочники используют ReferenceBase

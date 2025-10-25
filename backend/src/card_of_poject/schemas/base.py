@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from uuid import UUID as PyUUID
-from typing import Optional
-from datetime import datetime
+
 
 
 class ReferenceBase(BaseModel):
@@ -16,7 +15,7 @@ class ReferenceResponse(ReferenceBase):
     oid: PyUUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # INFO: для спрвочников и общих данных

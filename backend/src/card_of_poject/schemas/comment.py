@@ -2,7 +2,8 @@ from pydantic import BaseModel
 from uuid import UUID as PyUUID
 from typing import Optional
 from datetime import datetime
-from .references import ReferenceResponse
+
+from src.card_of_poject.schemas.base import ReferenceResponse
 
 
 class CommentBase(BaseModel):
@@ -21,4 +22,4 @@ class CommentResponse(CommentBase):
     author: ReferenceResponse  # User.name
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -1,9 +1,9 @@
 from datetime import datetime
-from models import ProjectHistory, User, Stage
-from typing import List, Optional, Dict
+from typing import List,  Dict
 from uuid import UUID as PyUUID
 from sqlalchemy.orm import selectinload
 from sqlalchemy import select
+from src.card_of_poject.model import ProjectHistory, Stage
 from src.card_of_poject.repository.base_repository import BaseRepository
 
 
