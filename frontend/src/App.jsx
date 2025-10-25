@@ -5,6 +5,7 @@ import Profile from './pages/Profile.jsx';
 import PrivateFiles from './pages/PrivateFiles.jsx';
 import Files from './pages/Files.jsx';
 import CreateProject from './pages/CreateProject.jsx';
+import Templates from './pages/Templates.jsx';
 import Calendar from './components/Calendar/Calendar.jsx';
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx';
 import { ToastContainer } from 'react-toastify';
@@ -35,8 +36,8 @@ const RoleBasedDashboard = () => {
               <Home />
             </div>
             <div className="dashboardCard">
-              <h2>User Management</h2>
-              <p>Admin tools for managing users</p>
+              <h2>Templates</h2>
+              <Templates />
             </div>
             <div className="dashboardCard">
               <h2>Files</h2>
