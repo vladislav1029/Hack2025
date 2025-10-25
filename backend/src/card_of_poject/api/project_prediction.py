@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from backend.src.core.auth.current import get_current_user
 from repository import ProjectPredictionRepository, ProjectRepository
 from schemas import ProjectPredictionCreate, ProjectPredictionResponse
 from models import ProjectPrediction, Project, Role
@@ -7,7 +8,8 @@ from uuid import UUID as PyUUID
 from typing import Optional
 from database import get_session
 from core.models.role import Role
-from dependencies import require_role
+
+# from dependencies import require_role
 from models import User
 
 router = APIRouter(prefix="/predictions", tags=["Predictions"])

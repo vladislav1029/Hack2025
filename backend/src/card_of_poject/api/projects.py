@@ -9,7 +9,7 @@ from schemas import (
     AnalyticsResponse,
 )
 from models import Project, Stage
-from database import get_async_session, require_role
+from database import get_async_session
 from core.models.role import Role
 from uuid import UUID as PyUUID
 from typing import List, Optional
@@ -21,10 +21,11 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 @router.post(
     "/",
     response_model=ProjectResponse,
-    dependencies=[Depends(require_role(Role.MANAGER))],
 )
 async def create_project(
-    project: ProjectCreate, session: AsyncSession = Depends(get_async_session)
+    project: ProjectCreate,
+    user_data: DepCurrentUser,
+    session: AsyncSession = Depends(get_async_session),
 ):
     repo = ProjectRepository(session, Project)
     stage_repo = StageRepository(session, Stage)

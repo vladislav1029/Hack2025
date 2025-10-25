@@ -8,7 +8,6 @@ from database import get_session
 from core.models.role import Role
 from uuid import UUID as PyUUID
 from typing import List
-from dependencies import require_role
 from models import User
 
 router = APIRouter(prefix="/comments", tags=["Comments"])
