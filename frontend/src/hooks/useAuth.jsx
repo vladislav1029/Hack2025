@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       // Token is invalid or expired, remove it
       localStorage.removeItem('access_token');
-      localStorage.removeItem('token_type');
     } finally {
       setLoading(false);
     }
@@ -39,9 +38,8 @@ export const AuthProvider = ({ children }) => {
 
       const response = await authAPI.login(username, password);
 
-      // Store tokens
+      // Store token (refresh token is handled by backend cookies)
       localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('token_type', response.token_type);
 
       // Get user data
       const userData = await authAPI.getCurrentUser();
@@ -170,9 +168,9 @@ export const AuthProvider = ({ children }) => {
 
   const getRoleName = (role) => {
     switch (role) {
-      case 0: return 'User';
-      case 1: return 'Moderator';
-      case 2: return 'Administrator';
+      case 0: return 'Administrator';
+      case 1: return 'Manager';
+      case 2: return 'User';
       default: return 'Unknown';
     }
   };

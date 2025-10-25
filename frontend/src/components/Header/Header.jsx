@@ -34,7 +34,7 @@ const Header = () => {
             {isAuthenticated ? (
               <div className={styles.userMenu}>
                 <span className={styles.userInfo}>
-                  Welcome, {user?.email} ({user?.role === 0 ? 'User' : user?.role === 1 ? 'Moderator' : 'Admin'})
+                  Welcome, {user?.email} ({user?.role === 0 ? 'Administrator' : user?.role === 1 ? 'Manager' : 'User'})
                 </span>
                 <button className={styles.logoutBtn} onClick={handleLogout}>
                   Logout

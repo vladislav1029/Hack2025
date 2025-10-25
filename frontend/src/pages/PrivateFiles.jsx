@@ -86,7 +86,7 @@ const PrivateFiles = () => {
           <p>Secure file management for authenticated users</p>
           <div className="userInfo">
             <span className="userBadge">
-              Logged in as: {user?.email} ({user?.role === 0 ? 'User' : user?.role === 1 ? 'Moderator' : 'Admin'})
+              Logged in as: {user?.email} ({user?.role === 0 ? 'Administrator' : user?.role === 1 ? 'Manager' : 'User'})
             </span>
           </div>
         </div>

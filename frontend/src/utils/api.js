@@ -104,7 +104,9 @@ class ApiClient {
   }
 
   async refreshToken() {
-    return this.request('/account/refresh');
+    return this.request('/account/refresh', {
+      method: 'GET',
+    });
   }
 
   // File operations (if needed)
@@ -126,9 +128,12 @@ class ApiClient {
     return this.request(endpoint);
   }
 
-  async getFileLink(filename, isPrivate = false) {
-    const endpoint = isPrivate ? `/private/link/${filename}` : `/file/link/${filename}`;
-    return this.request(endpoint);
+  async getFileLink(filename, isPrivate = true) {
+    // Only private files support temporary links in this API
+    if (!isPrivate) {
+      throw new Error('Public files do not support temporary download links');
+    }
+    return this.request(`/private/link/${filename}`);
   }
 
   async downloadFile(tempLink) {
