@@ -310,6 +310,128 @@ class ApiClient {
       throw new ApiError(error.message, error.response?.status || 0);
     }
   }
+
+  // Payment operations
+  async getPayments() {
+    try {
+      const response = await axiosInstance.get('/references/payment');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createPayment(paymentData) {
+    try {
+      const response = await axiosInstance.post('/references/payment', paymentData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getPayment(paymentId) {
+    try {
+      const response = await axiosInstance.get(`/references/payment/${paymentId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updatePayment(paymentId, paymentData) {
+    try {
+      const response = await axiosInstance.put(`/references/payment/${paymentId}`, paymentData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deletePayment(paymentId) {
+    try {
+      const response = await axiosInstance.delete(`/references/payment/${paymentId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  // Business Segment operations
+  async getBusinessSegments() {
+    try {
+      const response = await axiosInstance.get('/references/business_segment');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createBusinessSegment(businessSegmentData) {
+    try {
+      const response = await axiosInstance.post('/references/business_segment', businessSegmentData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getBusinessSegment(businessSegmentId) {
+    try {
+      const response = await axiosInstance.get(`/references/business_segment/${businessSegmentId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updateBusinessSegment(businessSegmentId, businessSegmentData) {
+    try {
+      const response = await axiosInstance.put(`/references/business_segment/${businessSegmentId}`, businessSegmentData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deleteBusinessSegment(businessSegmentId) {
+    try {
+      const response = await axiosInstance.delete(`/references/business_segment/${businessSegmentId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
 }
 
 // Create and export API client instance
