@@ -12,7 +12,7 @@ from src.core.auth.current import DepCurrentUser
 
 from uuid import UUID as PyUUID, uuid4
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.core.exceptions import InsufficientPermissionsError, ResourceNotFoundError
 from src.core.models.role import Role
@@ -38,7 +38,11 @@ async def create_project(
     if not stage:
         raise ResourceNotFoundError()
     oid = uuid4()
-    project_data = Project(oid=oid, **project.model_validate())
+    project_data = Project(
+        oid=oid,
+        **project.model_validate(),
+        created_at=datetime.now(timezone.utc),
+    )
     project_data.probability = stage.probability
     created_project = await project_repo.add(project_data)
     return created_project
@@ -86,6 +90,7 @@ async def update_project(
         update_data["probability"] = stage.probability
     for key, value in update_data.items():
         setattr(existing_project, key, value)
+    update_data["update_at"] = datetime.now(timezone.utc)
     updated_project = await project_repo.add(existing_project)
     return updated_project
 

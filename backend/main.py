@@ -9,6 +9,7 @@ from src.config import settings
 from src.bootstrap import ensure_buckets, init_minio_client
 from src.core.handlers import include_all_exceptions_handlers
 from src.logger_config import configure_logging
+from src.card_of_poject.api.comment import router as comment_router
 from src.card_of_poject.api.references import router as references_router
 from src.card_of_poject.api.projects import router as project_router
 from src.auth.endpoint import router as router_auth
@@ -37,6 +38,7 @@ def main() -> FastAPI:
         lifespan=lifespan,
     )
     include_all_exceptions_handlers(app)
+    app.include_router(router=comment_router)
     app.include_router(router=references_router)
     app.include_router(router=project_router)
     app.include_router(router=router_auth, prefix="/account")

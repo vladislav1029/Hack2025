@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.auth.current import get_current_user
-from repository import CommentRepository, ProjectRepository
-from schemas import CommentCreate, CommentResponse
-from models import Comment, Project
-from database import get_session
-from core.models.role import Role
-from uuid import UUID as PyUUID
+__all__ = ["router"]
+from datetime import datetime, timezone
 from typing import List
-from models import User
+from uuid import uuid4
+from uuid import UUID as PyUUID
+from fastapi import APIRouter
+from src.card_of_poject.model import Comment
+from src.card_of_poject.schemas.comment import CommentCreate, CommentResponse
+from src.core.auth.current import DepCurrentUser
+from src.core.exceptions import InsufficientPermissionsError, ResourceNotFoundError
+from src.core.models.role import Role
+from src.dependency import DepCommentRep, DepProjectRep
+
 
 router = APIRouter(prefix="/comments", tags=["Comments"])
 
@@ -19,54 +21,59 @@ router = APIRouter(prefix="/comments", tags=["Comments"])
 )
 async def create_comment(
     comment: CommentCreate,
-    session: AsyncSession = Depends(get_session),
-    user: User = Depends(get_current_user),
+    comment_repo: DepCommentRep,
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
 ):
-    repo = CommentRepository(session, Comment)
-    project = await ProjectRepository(session, Project).get(comment.project_id)
+    user_oid, user_role = user_data
+    project = await project_repo.get(comment.project_id)
+    if user_role == Role.MANAGER and project.manager_id != user_oid:
+        raise InsufficientPermissionsError()
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    if user.role == Role.MANAGER and project.manager_id != user.oid:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
-        )
-    comment_data = Comment(**comment.dict())
-    created_comment = await repo.add(comment_data)
+        raise ResourceNotFoundError()
+    oid = uuid4()
+
+    comment_data = Comment(
+        oid=oid,
+        **comment.model_dump(),
+        created_at=datetime.now(timezone.utc),
+    )
+    created_comment = await comment_repo.add(comment_data)
     return created_comment
 
 
 @router.get("/project/{project_id}", response_model=List[CommentResponse])
 async def list_comments(
     project_id: PyUUID,
-    session: AsyncSession = Depends(get_session),
-    user: User = Depends(get_current_user),
+    comment_repo: DepCommentRep,
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
 ):
-    repo = CommentRepository(session, Comment)
-    project = await ProjectRepository(session, Project).get(project_id)
+    user_oid, user_role = user_data
+
+    project = await project_repo.get(project_id)
     if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    if user.role == Role.MANAGER and project.manager_id != user.oid:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
-        )
-    comments = await repo.list_for_project(project_id)
+        raise ResourceNotFoundError()
+    if user_role == Role.MANAGER and project.manager_id != user_oid:
+        raise InsufficientPermissionsError()
+    comments = await comment_repo.list_for_project(project_id)
     return comments
 
 
 @router.delete("/{comment_id}")
 async def delete_comment(
     comment_id: PyUUID,
-    session: AsyncSession = Depends(get_session),
-    user: User = Depends(get_current_user),
+    comment_repo: DepCommentRep,
+    user_data: DepCurrentUser,
+    project_repo: DepProjectRep,
 ):
-    repo = CommentRepository(session, Comment)
-    comment = await repo.get(comment_id)
+    user_oid, user_role = user_data
+
+    comment = await comment_repo.get(comment_id)
     if not comment:
-        raise HTTPException(status_code=404, detail="Comment not found")
-    project = await ProjectRepository(session, Project).get(comment.project_id)
-    if user.role == Role.MANAGER and project.manager_id != user.oid:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
-        )
-    await repo.delete(comment_id)
+        raise ResourceNotFoundError()
+    project = await project_repo.get(comment.project_id)
+    if user_role == Role.MANAGER and project.manager_id != user_oid:
+        raise InsufficientPermissionsError()
+    await comment_repo.delete(comment_id)
     return {"message": "Comment deleted"}
