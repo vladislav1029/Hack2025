@@ -1,0 +1,149 @@
+.header {
+  background: #2c2c2c;
+  border-bottom: 1px solid #444;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  color: #2c2c2c;
+}
+
+.logoText {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+}
+
+.signInBtn {
+  background: #2a2a2a;
+  color: white;
+  border: 2px solid #00ff88;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+.signInBtn:hover {
+  background: #333;
+  border-color: #00ff88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+  transform: translateY(-1px);
+}
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userInfo {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.logoutBtn {
+  background: #dc2626;
+  color: white;
+  border: 2px solid #ef4444;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.logoutBtn:hover {
+  background: #ef4444;
+  border-color: #f87171;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .header__content {
+    padding: 10px 0;
+  }
+
+  .logoText {
+    font-size: 20px;
+  }
+
+  .signInBtn {
+    padding: 6px 14px;
+    font-size: 13px;
+    border-width: 1px;
+  }
+
+  .userMenu {
+    gap: 12px;
+  }
+
+  .userInfo {
+    font-size: 13px;
+  }
+
+  .logoutBtn {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-width: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .logoIcon {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .logoText {
+    font-size: 18px;
+  }
+}

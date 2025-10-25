@@ -4,8 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from structlog import get_logger
 
 from src.core.auth.models import RefreshToken
-from src.core.exceptions import ResourceNotFoundError
-from src.core.reposiory import IDType
+from src.core.repository import IDType
 
 
 log = get_logger()

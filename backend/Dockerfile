@@ -18,3 +18,4 @@ COPY ./src ./src
 COPY alembic.ini .
 COPY ./migrations ./migrations
 COPY main.py .
+COPY start_command.py .

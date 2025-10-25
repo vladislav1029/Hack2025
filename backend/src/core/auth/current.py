@@ -1,4 +1,3 @@
-from re import L
 from typing import Annotated
 import uuid
 from uuid import UUID
@@ -7,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from src.core.auth.dto import TokenAccessDict
 from src.core.exceptions import InvalidTokenError as CustomInvalidTokenError
-from src.dependensy import DepJwtHandler
+from src.dependency import DepJwtHandler
 from structlog import get_logger
 
 log = get_logger()

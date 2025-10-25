@@ -7,7 +7,7 @@ from fastapi import APIRouter, File, UploadFile
 from structlog import get_logger
 
 from src.core.minio.utils import make_s3_safe_filename
-from src.dependensy import DepPublicMinioHand
+from src.dependency import DepPublicMinioHand
 
 log = get_logger()
 
