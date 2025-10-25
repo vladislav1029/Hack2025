@@ -1,0 +1,45 @@
+/* Home Page Styles */
+.homePage {
+  min-height: 100vh;
+  background: #f0f0f0;
+  padding: 20px 0;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.cardsGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.filterContainer {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .filterContainer {
+    width: 100%;
+  }
+}

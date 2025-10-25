@@ -1,0 +1,97 @@
+.header {
+  background: #2c2c2c;
+  border-bottom: 1px solid #444;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  color: #2c2c2c;
+}
+
+.logoText {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+}
+
+.signInBtn {
+  background: #4a4a4a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.signInBtn:hover {
+  background: #5a5a5a;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .header__content {
+    padding: 10px 0;
+  }
+
+  .logoText {
+    font-size: 20px;
+  }
+
+  .signInBtn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .logoIcon {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .logoText {
+    font-size: 18px;
+  }
+}
