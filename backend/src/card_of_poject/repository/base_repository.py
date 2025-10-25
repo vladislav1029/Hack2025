@@ -3,19 +3,13 @@ from typing import Dict, TypeVar, Generic, Union, Type, List, Optional
 from uuid import UUID as PyUUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import func, select, delete
-from sqlalchemy.orm import selectinload
 from abc import ABC, abstractmethod
-from backend.src.card_of_poject.model import (
-    Comment,
+from src.card_of_poject.model import (
     Dashboard,
-    FinancialPeriod,
-    Project,
-    ProjectHistory,
     ProjectPrediction,
     Report,
-    Stage,
 )
-from models import Base
+from src.models import Base
 
 Entity = TypeVar("Entity", bound=Base)
 IDType = Union[int, PyUUID]

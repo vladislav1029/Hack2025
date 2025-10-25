@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from backend.src.card_of_poject.model import (
+from src.card_of_poject.model import (
     BusinessSegment,
     Comment,
     CostStatus,
@@ -12,7 +12,7 @@ from backend.src.card_of_poject.model import (
     Service,
     Stage,
 )
-from backend.src.card_of_poject.repository.base_repository import BaseRepository, IDType
+from src.card_of_poject.repository.base_repository import BaseRepository, IDType
 
 
 class StageRepository(BaseRepository[Stage]):

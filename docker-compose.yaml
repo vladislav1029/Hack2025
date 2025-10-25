@@ -42,22 +42,22 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/src/:/app/src
-    command: ["sh", "-c", "poetry run python -m start_command && alembic upgrade head  && poetry run python -m uvicorn  main:main --factory --host 0.0.0.0 --port 8000"]
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:5184"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - PORT=5173
-    depends_on:
-      - app
-    command: npm start
+    command: ["sh", "-c", "alembic upgrade head  && poetry run python -m start_command  && poetry run python -m uvicorn  main:main --factory --host 0.0.0.0 --port 8000"]
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:5184"
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   environment:
+  #     - NODE_ENV=development
+  #     - PORT=5184
+  #   depends_on:
+  #     - app
+  #   command: npm start
 volumes:
   memory_data:
   minio_data:

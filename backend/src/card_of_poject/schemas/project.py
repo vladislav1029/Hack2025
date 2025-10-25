@@ -3,12 +3,13 @@ from uuid import UUID as PyUUID
 from typing import Optional, List, Dict, Union
 from datetime import datetime
 
-from backend.src.card_of_poject.schemas.base import ReferenceResponse
-from .references import StageResponse, ServiceResponse, BusinessSegmentResponse
-from repository.financila import FinancialPeriodResponse
-from repository.history import ProjectHistoryResponse
-from repository.references import CommentResponse
-from repository.base_repository import ProjectPredictionResponse
+from src.card_of_poject.schemas.base import ReferenceResponse
+from src.card_of_poject.schemas.comment import CommentResponse
+from src.card_of_poject.schemas.financial import FinancialPeriodResponse
+from src.card_of_poject.schemas.history import ProjectHistoryResponse
+from src.card_of_poject.schemas.prediction import ProjectPredictionResponse
+from src.card_of_poject.schemas.references import BusinessSegmentResponse, ServiceResponse, StageResponse
+
 
 
 class ProjectBase(BaseModel):
@@ -78,7 +79,7 @@ class ProjectResponse(ProjectBase):
     predictions: List[ProjectPredictionResponse]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProjectRegistryResponse(BaseModel):
@@ -96,7 +97,7 @@ class ProjectRegistryResponse(BaseModel):
     changes: List[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AnalyticsResponse(BaseModel):

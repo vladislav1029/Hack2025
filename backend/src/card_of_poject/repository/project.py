@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 from sqlalchemy.orm import selectinload
 
 from sqlalchemy import func, select
-from backend.src.card_of_poject.model import (
+from src.card_of_poject.model import (
     BusinessSegment,
     FinancialPeriod,
     Project,
@@ -11,8 +11,8 @@ from backend.src.card_of_poject.model import (
     Service,
     Stage,
 )
-from backend.src.card_of_poject.repository.base_repository import BaseRepository, IDType
-from backend.src.core.auth.models import User
+from src.card_of_poject.repository.base_repository import BaseRepository, IDType
+from src.core.auth.models import User
 
 
 class ProjectRepository(BaseRepository[Project]):

@@ -1,7 +1,12 @@
 from pydantic import BaseModel, field_validator
 from uuid import UUID as PyUUID
 from typing import Optional
-from .references import RevenueStatusResponse, CostTypeResponse, CostStatusResponse
+
+from src.card_of_poject.schemas.references import (
+    CostStatusResponse,
+    CostTypeResponse,
+    RevenueStatusResponse,
+)
 
 
 class FinancialPeriodBase(BaseModel):
@@ -15,15 +20,18 @@ class FinancialPeriodBase(BaseModel):
     cost_status_id: Optional[PyUUID] = None
 
     @field_validator("revenue_status_id")
-    def check_revenue_status(cls, v, values):
+    def validate_revenue_status_id(cls, v, info):
+        values = info.data
         if values.get("revenue") is not None and not v:
             raise ValueError("revenue_status_id required when revenue is set")
         return v
 
     @field_validator("cost_type_id", "cost_status_id")
-    def check_cost_fields(cls, v, values, field):
+    def validate_cost_fields(cls, v, info):
+        values = info.data
+        field_name = info.field_name
         if values.get("costs") is not None and not v:
-            raise ValueError(f"{field.name} required when costs is set")
+            raise ValueError(f"{field_name} required when costs is set")
         return v
 
 
@@ -44,7 +52,7 @@ class FinancialPeriodResponse(FinancialPeriodBase):
     cost_status: Optional[CostStatusResponse]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class FinancialPeriodGanttResponse(BaseModel):
@@ -55,4 +63,4 @@ class FinancialPeriodGanttResponse(BaseModel):
     cost_type: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
