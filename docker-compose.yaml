@@ -54,7 +54,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - PORT=5173
+      - PORT=5184
     depends_on:
       - app
     command: npm start
