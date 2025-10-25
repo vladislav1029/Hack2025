@@ -3,16 +3,20 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, List
 from uuid import UUID as PyUUID
 
+
 from sqlalchemy import (
     JSON,
+    UUID,
     Boolean,
-    Date,
     ForeignKey,
     Integer,
+    Numeric,
     String,
     Text,
+    Date,
+    # JSON,
     TIMESTAMP,
-    Numeric,
+    UniqueConstraint,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
