@@ -8,6 +8,10 @@ const Templates = () => {
   const [services, setServices] = useState([]);
   const [payments, setPayments] = useState([]);
   const [businessSegments, setBusinessSegments] = useState([]);
+  const [costs, setCosts] = useState([]);
+  const [evaluations, setEvaluations] = useState([]);
+  const [revenueStatuses, setRevenueStatuses] = useState([]);
+  const [costStatuses, setCostStatuses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -22,16 +26,36 @@ const Templates = () => {
   const [businessSegmentFormData, setBusinessSegmentFormData] = useState({
     name: ''
   });
+  const [costFormData, setCostFormData] = useState({
+    name: ''
+  });
+  const [evaluationFormData, setEvaluationFormData] = useState({
+    name: ''
+  });
+  const [revenueStatusFormData, setRevenueStatusFormData] = useState({
+    name: ''
+  });
+  const [costStatusFormData, setCostStatusFormData] = useState({
+    name: ''
+  });
   const [editingStage, setEditingStage] = useState(null);
   const [editingService, setEditingService] = useState(null);
   const [editingPayment, setEditingPayment] = useState(null);
   const [editingBusinessSegment, setEditingBusinessSegment] = useState(null);
+  const [editingCost, setEditingCost] = useState(null);
+  const [editingEvaluation, setEditingEvaluation] = useState(null);
+  const [editingRevenueStatus, setEditingRevenueStatus] = useState(null);
+  const [editingCostStatus, setEditingCostStatus] = useState(null);
 
   useEffect(() => {
     loadStages();
     loadServices();
     loadPayments();
     loadBusinessSegments();
+    loadCosts();
+    loadEvaluations();
+    loadRevenueStatuses();
+    loadCostStatuses();
   }, []);
 
   const loadStages = async () => {
@@ -84,6 +108,114 @@ const Templates = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadCosts = async () => {
+    try {
+      setLoading(true);
+      const data = await apiClient.getCosts();
+      setCosts(data);
+    } catch (error) {
+      toast.error('Failed to load costs');
+      console.error('Error loading costs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadEvaluations = async () => {
+    try {
+      setLoading(true);
+      const data = await apiClient.getEvaluations();
+      setEvaluations(data);
+    } catch (error) {
+      toast.error('Failed to load evaluations');
+      console.error('Error loading evaluations:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadRevenueStatuses = async () => {
+    try {
+      setLoading(true);
+      const data = await apiClient.getRevenueStatuses();
+      setRevenueStatuses(data);
+    } catch (error) {
+      toast.error('Failed to load revenue statuses');
+      console.error('Error loading revenue statuses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadCostStatuses = async () => {
+    try {
+      setLoading(true);
+      const data = await apiClient.getCostStatuses();
+      setCostStatuses(data);
+    } catch (error) {
+      toast.error('Failed to load cost statuses');
+      console.error('Error loading cost statuses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCostStatusInputChange = (e) => {
+    const { name, value } = e.target;
+    setCostStatusFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCostStatusSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      if (editingCostStatus) {
+        await apiClient.updateCostStatus(editingCostStatus.oid, costStatusFormData);
+        toast.success('Cost status updated successfully');
+      } else {
+        await apiClient.createCostStatus(costStatusFormData);
+        toast.success('Cost status created successfully');
+      }
+      setCostStatusFormData({ name: '' });
+      setEditingCostStatus(null);
+      loadCostStatuses();
+    } catch (error) {
+      toast.error(editingCostStatus ? 'Failed to update cost status' : 'Failed to create cost status');
+      console.error('Error saving cost status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCostStatusEdit = (costStatus) => {
+    setCostStatusFormData({
+      name: costStatus.name
+    });
+    setEditingCostStatus(costStatus);
+  };
+
+  const handleCostStatusDelete = async (costStatusId) => {
+    try {
+      setLoading(true);
+      await apiClient.deleteCostStatus(costStatusId);
+      toast.success('Cost status deleted successfully');
+      loadCostStatuses();
+    } catch (error) {
+      toast.error('Failed to delete cost status');
+      console.error('Error deleting cost status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCostStatusCancel = () => {
+    setCostStatusFormData({ name: '' });
+    setEditingCostStatus(null);
   };
 
   const handleInputChange = (e) => {
@@ -309,6 +441,174 @@ const Templates = () => {
   const handleBusinessSegmentCancel = () => {
     setBusinessSegmentFormData({ name: '' });
     setEditingBusinessSegment(null);
+  };
+
+  const handleCostInputChange = (e) => {
+    const { name, value } = e.target;
+    setCostFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCostSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      if (editingCost) {
+        await apiClient.updateCost(editingCost.oid, costFormData);
+        toast.success('Cost updated successfully');
+      } else {
+        await apiClient.createCost(costFormData);
+        toast.success('Cost created successfully');
+      }
+      setCostFormData({ name: '' });
+      setEditingCost(null);
+      loadCosts();
+    } catch (error) {
+      toast.error(editingCost ? 'Failed to update cost' : 'Failed to create cost');
+      console.error('Error saving cost:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCostEdit = (cost) => {
+    setCostFormData({
+      name: cost.name
+    });
+    setEditingCost(cost);
+  };
+
+  const handleCostDelete = async (costId) => {
+    try {
+      setLoading(true);
+      await apiClient.deleteCost(costId);
+      toast.success('Cost deleted successfully');
+      loadCosts();
+    } catch (error) {
+      toast.error('Failed to delete cost');
+      console.error('Error deleting cost:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCostCancel = () => {
+    setCostFormData({ name: '' });
+    setEditingCost(null);
+  };
+
+  const handleEvaluationInputChange = (e) => {
+    const { name, value } = e.target;
+    setEvaluationFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleEvaluationSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      if (editingEvaluation) {
+        await apiClient.updateEvaluation(editingEvaluation.oid, evaluationFormData);
+        toast.success('Evaluation updated successfully');
+      } else {
+        await apiClient.createEvaluation(evaluationFormData);
+        toast.success('Evaluation created successfully');
+      }
+      setEvaluationFormData({ name: '' });
+      setEditingEvaluation(null);
+      loadEvaluations();
+    } catch (error) {
+      toast.error(editingEvaluation ? 'Failed to update evaluation' : 'Failed to create evaluation');
+      console.error('Error saving evaluation:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEvaluationEdit = (evaluation) => {
+    setEvaluationFormData({
+      name: evaluation.name
+    });
+    setEditingEvaluation(evaluation);
+  };
+
+  const handleEvaluationDelete = async (evaluationId) => {
+    try {
+      setLoading(true);
+      await apiClient.deleteEvaluation(evaluationId);
+      toast.success('Evaluation deleted successfully');
+      loadEvaluations();
+    } catch (error) {
+      toast.error('Failed to delete evaluation');
+      console.error('Error deleting evaluation:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEvaluationCancel = () => {
+    setEvaluationFormData({ name: '' });
+    setEditingEvaluation(null);
+  };
+
+  const handleRevenueStatusInputChange = (e) => {
+    const { name, value } = e.target;
+    setRevenueStatusFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleRevenueStatusSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      if (editingRevenueStatus) {
+        await apiClient.updateRevenueStatus(editingRevenueStatus.oid, revenueStatusFormData);
+        toast.success('Revenue status updated successfully');
+      } else {
+        await apiClient.createRevenueStatus(revenueStatusFormData);
+        toast.success('Revenue status created successfully');
+      }
+      setRevenueStatusFormData({ name: '' });
+      setEditingRevenueStatus(null);
+      loadRevenueStatuses();
+    } catch (error) {
+      toast.error(editingRevenueStatus ? 'Failed to update revenue status' : 'Failed to create revenue status');
+      console.error('Error saving revenue status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRevenueStatusEdit = (revenueStatus) => {
+    setRevenueStatusFormData({
+      name: revenueStatus.name
+    });
+    setEditingRevenueStatus(revenueStatus);
+  };
+
+  const handleRevenueStatusDelete = async (revenueStatusId) => {
+    try {
+      setLoading(true);
+      await apiClient.deleteRevenueStatus(revenueStatusId);
+      toast.success('Revenue status deleted successfully');
+      loadRevenueStatuses();
+    } catch (error) {
+      toast.error('Failed to delete revenue status');
+      console.error('Error deleting revenue status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRevenueStatusCancel = () => {
+    setRevenueStatusFormData({ name: '' });
+    setEditingRevenueStatus(null);
   };
 
   return (
@@ -596,6 +896,274 @@ const Templates = () => {
           </div>
         ) : (
           <p>No business segments found</p>
+        )}
+      </div>
+
+      {/* Cost Form */}
+      <div className="templateForm">
+        <div className="formGroup">
+          <label htmlFor="costName">Cost Name</label>
+          <input
+            type="text"
+            id="costName"
+            name="name"
+            value={costFormData.name}
+            onChange={handleCostInputChange}
+            placeholder="Enter cost name"
+          />
+        </div>
+
+        <div className="formActions">
+          <button
+            type="submit"
+            className="submitBtn"
+            onClick={handleCostSubmit}
+            disabled={loading}
+          >
+            {loading ? (editingCost ? 'Updating...' : 'Creating...') : (editingCost ? 'Update Cost' : 'Create Cost')}
+          </button>
+          {editingCost && (
+            <button
+              type="button"
+              className="cancelBtn"
+              onClick={handleCostCancel}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Costs List */}
+      <div className="stagesList">
+        <h2>Existing Costs</h2>
+        {loading && costs.length === 0 ? (
+          <p>Loading costs...</p>
+        ) : costs.length > 0 ? (
+          <div className="stagesGrid">
+            {costs.map(cost => (
+              <div key={cost.oid} className="stageCard">
+                <h3>{cost.name}</h3>
+                <div className="serviceActions">
+                  <button
+                    onClick={() => handleCostEdit(cost)}
+                    className="editBtn"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleCostDelete(cost.oid)}
+                    className="deleteBtn"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No costs found</p>
+        )}
+      </div>
+
+      {/* Evaluation Form */}
+      <div className="templateForm">
+        <div className="formGroup">
+          <label htmlFor="evaluationName">Evaluation Name</label>
+          <input
+            type="text"
+            id="evaluationName"
+            name="name"
+            value={evaluationFormData.name}
+            onChange={handleEvaluationInputChange}
+            placeholder="Enter evaluation name"
+          />
+        </div>
+
+        <div className="formActions">
+          <button
+            type="submit"
+            className="submitBtn"
+            onClick={handleEvaluationSubmit}
+            disabled={loading}
+          >
+            {loading ? (editingEvaluation ? 'Updating...' : 'Creating...') : (editingEvaluation ? 'Update Evaluation' : 'Create Evaluation')}
+          </button>
+          {editingEvaluation && (
+            <button
+              type="button"
+              className="cancelBtn"
+              onClick={handleEvaluationCancel}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Evaluations List */}
+      <div className="stagesList">
+        <h2>Existing Evaluations</h2>
+        {loading && evaluations.length === 0 ? (
+          <p>Loading evaluations...</p>
+        ) : evaluations.length > 0 ? (
+          <div className="stagesGrid">
+            {evaluations.map(evaluation => (
+              <div key={evaluation.oid} className="stageCard">
+                <h3>{evaluation.name}</h3>
+                <div className="serviceActions">
+                  <button
+                    onClick={() => handleEvaluationEdit(evaluation)}
+                    className="editBtn"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleEvaluationDelete(evaluation.oid)}
+                    className="deleteBtn"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No evaluations found</p>
+        )}
+      </div>
+
+      {/* Revenue Status Form */}
+      <div className="templateForm">
+        <div className="formGroup">
+          <label htmlFor="revenueStatusName">Revenue Status Name</label>
+          <input
+            type="text"
+            id="revenueStatusName"
+            name="name"
+            value={revenueStatusFormData.name}
+            onChange={handleRevenueStatusInputChange}
+            placeholder="Enter revenue status name"
+          />
+        </div>
+
+        <div className="formActions">
+          <button
+            type="submit"
+            className="submitBtn"
+            onClick={handleRevenueStatusSubmit}
+            disabled={loading}
+          >
+            {loading ? (editingRevenueStatus ? 'Updating...' : 'Creating...') : (editingRevenueStatus ? 'Update Revenue Status' : 'Create Revenue Status')}
+          </button>
+          {editingRevenueStatus && (
+            <button
+              type="button"
+              className="cancelBtn"
+              onClick={handleRevenueStatusCancel}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Revenue Statuses List */}
+      <div className="stagesList">
+        <h2>Existing Revenue Statuses</h2>
+        {loading && revenueStatuses.length === 0 ? (
+          <p>Loading revenue statuses...</p>
+        ) : revenueStatuses.length > 0 ? (
+          <div className="stagesGrid">
+            {revenueStatuses.map(revenueStatus => (
+              <div key={revenueStatus.oid} className="stageCard">
+                <h3>{revenueStatus.name}</h3>
+                <div className="serviceActions">
+                  <button
+                    onClick={() => handleRevenueStatusEdit(revenueStatus)}
+                    className="editBtn"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleRevenueStatusDelete(revenueStatus.oid)}
+                    className="deleteBtn"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No revenue statuses found</p>
+        )}
+      </div>
+
+      {/* Cost Status Form */}
+      <div className="templateForm">
+        <div className="formGroup">
+          <label htmlFor="costStatusName">Cost Status Name</label>
+          <input
+            type="text"
+            id="costStatusName"
+            name="name"
+            value={costStatusFormData.name}
+            onChange={handleCostStatusInputChange}
+            placeholder="Enter cost status name"
+          />
+        </div>
+
+        <div className="formActions">
+          <button
+            type="submit"
+            className="submitBtn"
+            onClick={handleCostStatusSubmit}
+            disabled={loading}
+          >
+            {loading ? (editingCostStatus ? 'Updating...' : 'Creating...') : (editingCostStatus ? 'Update Cost Status' : 'Create Cost Status')}
+          </button>
+          {editingCostStatus && (
+            <button
+              type="button"
+              className="cancelBtn"
+              onClick={handleCostStatusCancel}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Cost Statuses List */}
+      <div className="stagesList">
+        <h2>Existing Cost Statuses</h2>
+        {loading && costStatuses.length === 0 ? (
+          <p>Loading cost statuses...</p>
+        ) : costStatuses.length > 0 ? (
+          <div className="stagesGrid">
+            {costStatuses.map(costStatus => (
+              <div key={costStatus.oid} className="stageCard">
+                <h3>{costStatus.name}</h3>
+                <div className="serviceActions">
+                  <button
+                    onClick={() => handleCostStatusEdit(costStatus)}
+                    className="editBtn"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleCostStatusDelete(costStatus.oid)}
+                    className="deleteBtn"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No cost statuses found</p>
         )}
       </div>
     </div>

@@ -432,6 +432,250 @@ class ApiClient {
       throw new ApiError(error.message, error.response?.status || 0);
     }
   }
+
+  // Cost operations
+  async getCosts() {
+    try {
+      const response = await axiosInstance.get('/references/cost');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createCost(costData) {
+    try {
+      const response = await axiosInstance.post('/references/cost', costData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getCost(costId) {
+    try {
+      const response = await axiosInstance.get(`/references/cost/${costId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updateCost(costId, costData) {
+    try {
+      const response = await axiosInstance.put(`/references/cost/${costId}`, costData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deleteCost(costId) {
+    try {
+      const response = await axiosInstance.delete(`/references/cost/${costId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  // Evaluation operations
+  async getEvaluations() {
+    try {
+      const response = await axiosInstance.get('/references/evaluation');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createEvaluation(evaluationData) {
+    try {
+      const response = await axiosInstance.post('/references/evaluation', evaluationData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getEvaluation(evaluationId) {
+    try {
+      const response = await axiosInstance.get(`/references/evaluation/${evaluationId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updateEvaluation(evaluationId, evaluationData) {
+    try {
+      const response = await axiosInstance.put(`/references/evaluation/${evaluationId}`, evaluationData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deleteEvaluation(evaluationId) {
+    try {
+      const response = await axiosInstance.delete(`/references/evaluation/${evaluationId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  // Revenue Status operations
+  async getRevenueStatuses() {
+    try {
+      const response = await axiosInstance.get('/references/revenue_status');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createRevenueStatus(revenueStatusData) {
+    try {
+      const response = await axiosInstance.post('/references/revenue_status', revenueStatusData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getRevenueStatus(revenueStatusId) {
+    try {
+      const response = await axiosInstance.get(`/references/revenue_status/${revenueStatusId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updateRevenueStatus(revenueStatusId, revenueStatusData) {
+    try {
+      const response = await axiosInstance.put(`/references/revenue_status/${revenueStatusId}`, revenueStatusData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deleteRevenueStatus(revenueStatusId) {
+    try {
+      const response = await axiosInstance.delete(`/references/revenue_status/${revenueStatusId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  // Cost Status operations
+  async getCostStatuses() {
+    try {
+      const response = await axiosInstance.get('/references/cost_status');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createCostStatus(costStatusData) {
+    try {
+      const response = await axiosInstance.post('/references/cost_status', costStatusData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getCostStatus(costStatusId) {
+    try {
+      const response = await axiosInstance.get(`/references/cost_status/${costStatusId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updateCostStatus(costStatusId, costStatusData) {
+    try {
+      const response = await axiosInstance.put(`/references/cost_status/${costStatusId}`, costStatusData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deleteCostStatus(costStatusId) {
+    try {
+      const response = await axiosInstance.delete(`/references/cost_status/${costStatusId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
 }
 
 // Create and export API client instance
