@@ -16,6 +16,7 @@ __all__ = [
     "DepPaymentTypeRep",
     "DepEvaluationTypeRep",
     "DepBusinessSegmentRep",
+    "DepDashboardRep",
 ]
 from typing import Annotated
 from fastapi import Depends, Request
@@ -26,6 +27,7 @@ from src.card_of_poject.model import (
     Comment,
     CostStatus,
     CostType,
+    Dashboard,
     EvaluationType,
     FinancialPeriod,
     PaymentType,
@@ -49,6 +51,7 @@ from src.card_of_poject.repository import (
     ProjectHistoryRepository,
     ProjectRepository,
 )
+from src.card_of_poject.repository.base_repository import DashboardRepository
 from src.config import Settings
 from src.core.auth.hasher import PasswordHasher
 from src.core.auth.repository import TokenRepository
@@ -114,6 +117,12 @@ async def get_token_repository(session: AsyncSessionDep) -> TokenRepository:
 
 DepUserRep = Annotated[UserRepository, Depends(get_user_repository)]
 DepTokenRep = Annotated[TokenRepository, Depends(get_token_repository)]
+
+
+async def get_dashboard_repository(
+    session: AsyncSessionDep,
+) -> DashboardRepository:
+    return DashboardRepository(session, model=Dashboard)
 
 
 async def get_financial_period_repository(
@@ -202,3 +211,5 @@ DepEvaluationTypeRep = Annotated[
 DepBusinessSegmentRep = Annotated[
     BusinessSegmentRepository, Depends(get_business_segment_repository)
 ]
+
+DepDashboardRep = Annotated[DashboardRepository, Depends(get_dashboard_repository)]
