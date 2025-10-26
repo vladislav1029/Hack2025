@@ -70,6 +70,7 @@ class CostStatusRepository(BaseRepository[CostStatus]):
         result = await self.session.execute(qwery)
         return result.scalars().first()
 
+
 class CommentRepository(BaseRepository[Comment]):
     async def list_for_project(self, project_id: IDType) -> List[Comment]:
         query = (
