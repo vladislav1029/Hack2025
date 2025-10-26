@@ -39,6 +39,13 @@ const Templates = () => {
     name: ''
   });
 
+  // Edit mode state
+  const [editingItem, setEditingItem] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    probability: 0
+  });
+
   useEffect(() => {
     loadStages();
     loadServices();
@@ -346,6 +353,185 @@ const Templates = () => {
     }
   };
 
+  // Handle starting edit
+  const handleEdit = (template) => {
+    setEditingItem(`${template.typeId}-${template.oid}`);
+    setEditFormData({
+      name: template.name,
+      probability: template.probability || 0
+    });
+  };
+
+  // Handle canceling edit
+  const handleCancelEdit = () => {
+    setEditingItem(null);
+    setEditFormData({ name: '', probability: 0 });
+  };
+
+  // Handle saving edit
+  const handleSaveEdit = async (template) => {
+    try {
+      setLoading(true);
+      const updateData = template.typeId === 'stage'
+        ? { name: editFormData.name, probability: editFormData.probability }
+        : { name: editFormData.name };
+
+      let apiMethod;
+      switch (template.typeId) {
+        case 'stage':
+          apiMethod = apiClient.updateStage;
+          break;
+        case 'service':
+          apiMethod = apiClient.updateService;
+          break;
+        case 'payment':
+          apiMethod = apiClient.updatePayment;
+          break;
+        case 'businessSegment':
+          apiMethod = apiClient.updateBusinessSegment;
+          break;
+        case 'cost':
+          apiMethod = apiClient.updateCost;
+          break;
+        case 'evaluation':
+          apiMethod = apiClient.updateEvaluation;
+          break;
+        case 'revenueStatus':
+          apiMethod = apiClient.updateRevenueStatus;
+          break;
+        case 'costStatus':
+          apiMethod = apiClient.updateCostStatus;
+          break;
+        default:
+          throw new Error('Unknown template type');
+      }
+
+      await apiMethod(template.oid, updateData);
+      toast.success('Изменения сохранены успешно');
+
+      // Reload data
+      switch (template.typeId) {
+        case 'stage':
+          loadStages();
+          break;
+        case 'service':
+          loadServices();
+          break;
+        case 'payment':
+          loadPayments();
+          break;
+        case 'businessSegment':
+          loadBusinessSegments();
+          break;
+        case 'cost':
+          loadCosts();
+          break;
+        case 'evaluation':
+          loadEvaluations();
+          break;
+        case 'revenueStatus':
+          loadRevenueStatuses();
+          break;
+        case 'costStatus':
+          loadCostStatuses();
+          break;
+      }
+
+      handleCancelEdit();
+    } catch (error) {
+      toast.error('Ошибка при сохранении изменений');
+      console.error('Error updating item:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle delete
+  const handleDelete = async (template) => {
+    if (!window.confirm(`Вы уверены, что хотите удалить "${template.name}"?`)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      let apiMethod;
+      switch (template.typeId) {
+        case 'stage':
+          apiMethod = apiClient.deleteStage;
+          break;
+        case 'service':
+          apiMethod = apiClient.deleteService;
+          break;
+        case 'payment':
+          apiMethod = apiClient.deletePayment;
+          break;
+        case 'businessSegment':
+          apiMethod = apiClient.deleteBusinessSegment;
+          break;
+        case 'cost':
+          apiMethod = apiClient.deleteCost;
+          break;
+        case 'evaluation':
+          apiMethod = apiClient.deleteEvaluation;
+          break;
+        case 'revenueStatus':
+          apiMethod = apiClient.deleteRevenueStatus;
+          break;
+        case 'costStatus':
+          apiMethod = apiClient.deleteCostStatus;
+          break;
+        default:
+          throw new Error('Unknown template type');
+      }
+
+      await apiMethod(template.oid);
+      toast.success('Элемент удален успешно');
+
+      // Reload data
+      switch (template.typeId) {
+        case 'stage':
+          loadStages();
+          break;
+        case 'service':
+          loadServices();
+          break;
+        case 'payment':
+          loadPayments();
+          break;
+        case 'businessSegment':
+          loadBusinessSegments();
+          break;
+        case 'cost':
+          loadCosts();
+          break;
+        case 'evaluation':
+          loadEvaluations();
+          break;
+        case 'revenueStatus':
+          loadRevenueStatuses();
+          break;
+        case 'costStatus':
+          loadCostStatuses();
+          break;
+      }
+    } catch (error) {
+      toast.error('Ошибка при удалении элемента');
+      console.error('Error deleting item:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle edit form input change
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: name === 'probability' ? parseFloat(value) || 0 : value
+    }));
+  };
+
   // Combine all template data into a single table
   const allTemplates = [
     ...stages.map(s => ({ ...s, type: 'Этап', typeId: 'stage' })),
@@ -578,27 +764,81 @@ const Templates = () => {
             </tr>
 
             {/* Display all existing items */}
-            {allTemplates.map(template => (
-              <tr key={`${template.typeId}-${template.oid}`}>
-                <td>{template.type}</td>
-                <td>{template.name}</td>
-                <td>
-                  {template.typeId === 'stage' && `Вероятность: ${template.probability}%`}
-                </td>
-                <td className="actionButtons">
-                  <button
-                    className="editBtn"
-                  >
-                    ✏️ Редактировать
-                  </button>
-                  <button
-                    className="deleteBtn"
-                  >
-                    🗑️ Удалить
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {allTemplates.map(template => {
+              const isEditing = editingItem === `${template.typeId}-${template.oid}`;
+
+              return (
+                <tr key={`${template.typeId}-${template.oid}`}>
+                  <td>{template.type}</td>
+                  <td>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={editFormData.name}
+                        onChange={handleEditInputChange}
+                        placeholder="Название"
+                      />
+                    ) : (
+                      template.name
+                    )}
+                  </td>
+                  <td>
+                    {template.typeId === 'stage' && (
+                      isEditing ? (
+                        <input
+                          type="number"
+                          name="probability"
+                          value={editFormData.probability}
+                          onChange={handleEditInputChange}
+                          placeholder="Вероятность (%)"
+                          min="0"
+                          max="100"
+                          step="0.1"
+                        />
+                      ) : (
+                        `Вероятность: ${template.probability}%`
+                      )
+                    )}
+                  </td>
+                  <td className="actionButtons">
+                    {isEditing ? (
+                      <>
+                        <button
+                          className="saveBtn"
+                          onClick={() => handleSaveEdit(template)}
+                          disabled={loading}
+                        >
+                          💾 Сохранить
+                        </button>
+                        <button
+                          className="cancelBtn"
+                          onClick={handleCancelEdit}
+                          disabled={loading}
+                        >
+                          ❌ Отмена
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="editBtn"
+                          onClick={() => handleEdit(template)}
+                        >
+                          ✏️ Редактировать
+                        </button>
+                        <button
+                          className="deleteBtn"
+                          onClick={() => handleDelete(template)}
+                        >
+                          🗑️ Удалить
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
