@@ -1,0 +1,99 @@
+.drag-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.drag-toggle:hover {
+  border-color: #007bff;
+  color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.drag-toggle.active {
+  border-color: #28a745;
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.drag-toggle:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-text {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.drag-toggle.active .toggle-text {
+  color: #28a745;
+}
+
+/* Animation for lock/unlock transition */
+.lock-open, .lock-closed {
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.lock-open {
+  animation: unlockAnim 0.3s ease;
+}
+
+.lock-closed {
+  animation: lockAnim 0.3s ease;
+}
+
+@keyframes unlockAnim {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes lockAnim {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Responsive visibility */
+@media (max-width: 768px) {
+  .drag-toggle {
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .toggle-text {
+    display: none;
+  }
+
+  .drag-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .drag-toggle {
+    top: 5px;
+    right: 5px;
+  }
+}

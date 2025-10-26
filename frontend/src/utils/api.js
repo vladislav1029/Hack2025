@@ -629,6 +629,80 @@ class ApiClient {
     }
   }
 
+  // Users operations
+  async getUsers() {
+    try {
+      const response = await axiosInstance.get('/account/users');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  // Projects operations
+  async getProjects(params = {}) {
+    try {
+      const response = await axiosInstance.get('/projects/', { params });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async createProject(projectData) {
+    try {
+      const response = await axiosInstance.post('/projects/', projectData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async getProject(projectId) {
+    try {
+      const response = await axiosInstance.get(`/projects/${projectId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async updateProject(projectId, projectData) {
+    try {
+      const response = await axiosInstance.put(`/projects/${projectId}`, projectData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
+  async deleteProject(projectId) {
+    try {
+      const response = await axiosInstance.delete(`/projects/${projectId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.detail) {
+        throw new ApiError(error.response.data.detail, error.response.status, error.response.data);
+      }
+      throw new ApiError(error.message, error.response?.status || 0);
+    }
+  }
+
   async createCostStatus(costStatusData) {
     try {
       const response = await axiosInstance.post('/references/cost_status', costStatusData);

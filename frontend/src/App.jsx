@@ -7,7 +7,9 @@ import Files from './pages/Files.jsx';
 import CreateProject from './pages/CreateProject.jsx';
 import Templates from './pages/Templates.jsx';
 import Calendar from './components/Calendar/Calendar.jsx';
+import DragToggle from './components/DragToggle/DragToggle.jsx';
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx';
+import { useDragDrop } from './hooks/useDragDrop.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -16,91 +18,103 @@ import './App.css';
 const RoleBasedDashboard = () => {
   const { user, isAuthenticated, loading } = useAuth();
 
+  // Define default layouts for each role
+  const getDefaultLayout = (role) => {
+    switch (role) {
+      case 0: // Administrator
+        return [
+          { id: 'projects', type: 'component', title: 'Проекты', component: Home },
+          { id: 'profile', type: 'component', title: 'Профиль', component: Profile },
+          { id: 'private-files', type: 'component', title: 'Приватные файлы', component: PrivateFiles },
+          { id: 'templates', type: 'component', title: 'Шаблоны', component: Templates }
+        ];
+      case 1: // Manager
+        return [
+          { id: 'projects', type: 'component', title: 'Управление проектами', component: Home },
+          { id: 'private-files', type: 'component', title: 'Приватные файлы', component: PrivateFiles },
+          { id: 'profile', type: 'component', title: 'Профиль', component: Profile }
+        ];
+      case 2: // User
+        return [
+          { id: 'projects', type: 'component', title: 'Мои проекты', component: Home },
+          { id: 'public-files', type: 'component', title: 'Общедоступные файлы', component: Files },
+          { id: 'calendar', type: 'component', title: 'Календарь', component: Calendar }
+        ];
+      default:
+        return [];
+    }
+  };
+
+  const getDashboardTitle = (role) => {
+    switch (role) {
+      case 0: return 'Панель администратора';
+      case 1: return 'Панель менеджера';
+      case 2: return 'Панель пользователя';
+      default: return 'Панель управления';
+    }
+  };
+
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Загрузка...</div>;
   }
 
   if (!isAuthenticated) {
-    return <div className="loginMessage">Please log in to access the application</div>;
+    return <div className="loginMessage">Пожалуйста, войдите в систему для доступа к приложению</div>;
   }
 
-  // Role-based content rendering
-  switch (user?.role) {
-    case 0: // Administrator - full access to all features
-      return (
-        <div className="adminDashboard">
-          <h1>Administrator Dashboard</h1>
-          <div className="dashboardGrid admin-equal-cards">
-            <div className="dashboardCard">
-              <h2>Projects</h2>
-              <Home />
-            </div>
-            <div className="dashboardCard">
-              <h2>Profile</h2>
-              <Profile />
-            </div>
-            <div className="dashboardCard">
-              <h2>Private Files</h2>
-              <PrivateFiles />
-            </div>
-            <div className="dashboardCard">
-              <h2>Templates</h2>
-              <Templates />
-            </div>
-          </div>
-        </div>
-      );
+  // Initialize drag and drop with role-specific layout
+  const { layout, isDragMode, toggleDragMode, handleDragStart, handleDragEnd, handleDragOver, handleDrop } = useDragDrop(
+    `dashboard_role_${user?.role}`,
+    getDefaultLayout(user?.role)
+  );
 
-    case 1: // Manager - project management and user files
-      return (
-        <div className="managerDashboard">
-          <h1>Manager Dashboard</h1>
-          <div className="dashboardGrid">
-            <div className="dashboardCard">
-              <h2>Projects Management</h2>
-              <Home />
-            </div>
-            <div className="dashboardCard">
-              <h2>Private Files</h2>
-              <PrivateFiles />
-            </div>
-            <div className="dashboardCard">
-              <h2>Profile</h2>
-              <Profile />
-            </div>
-          </div>
-        </div>
-      );
+  const renderDraggableCard = (item, index) => {
+    const Component = item.component;
+    const isDraggable = isDragMode;
 
-    case 2: // User - basic access
-      return (
-        <div className="userDashboard">
-          <h1>User Dashboard</h1>
-          <div className="dashboardGrid">
-            <div className="dashboardCard">
-              <h2>My Projects</h2>
-              <Home />
-            </div>
-            <div className="dashboardCard">
-              <h2>Public Files</h2>
-              <Files />
-            </div>
-            <div className="dashboardCard">
-              <h2>Calendar</h2>
-              <Calendar />
-            </div>
-          </div>
-        </div>
-      );
+    return (
+      <div
+        key={`${item.type}_${item.id}`}
+        className={`dashboardCard ${isDraggable ? 'draggable' : ''}`}
+        draggable={isDraggable}
+        onDragStart={(e) => handleDragStart(e, item.id, item.type)}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDrop={(e) => handleDrop(e, item.id)}
+        style={{
+          cursor: isDraggable ? 'move' : 'default',
+          opacity: isDraggable ? 0.9 : 1,
+          transition: 'all 0.2s ease'
+        }}
+      >
+        <h2>{item.title}</h2>
+        <Component />
+      </div>
+    );
+  };
 
-    default:
-      return (
-        <div className="unknownRole">
-          <h1>Access Restricted</h1>
-          <p>Your role is not recognized. Please contact an administrator.</p>
+  return (
+    <div className="dashboardContainer">
+      <div className="dashboardHeader">
+        <h1>{getDashboardTitle(user?.role)}</h1>
+        <DragToggle isDragMode={isDragMode} onToggle={toggleDragMode} />
+      </div>
+
+      <div
+        className={`dashboardGrid ${isDragMode ? 'drag-mode' : ''}`}
+        onDragOver={handleDragOver}
+        onDrop={(e) => handleDrop(e, 'end')}
+      >
+        {layout.map((item, index) => renderDraggableCard(item, index))}
+      </div>
+
+      {isDragMode && (
+        <div className="dragInstructions">
+          Перетаскивайте компоненты для изменения их расположения
         </div>
-      );
-  }
+      )}
+    </div>
+  );
 };
 
 function App() {

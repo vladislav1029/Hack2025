@@ -1,11 +1,11 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "vite --[ort $PORT]", 
+    "start": "vite --port $PORT",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

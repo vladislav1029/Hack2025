@@ -17,6 +17,27 @@ body {
   min-height: 100vh;
 }
 
+/* Dashboard Container */
+.dashboardContainer {
+  padding: 20px;
+  min-height: calc(100vh - 80px);
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.dashboardHeader h1 {
+  color: #333;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
 /* Role-based Dashboard Styles */
 .adminDashboard,
 .managerDashboard,
@@ -40,6 +61,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
 .admin-equal-cards {
@@ -56,12 +78,59 @@ body {
   min-height: 400px;
 }
 
+/* Drag Mode Styles */
+.dashboardGrid.drag-mode {
+  background: rgba(0, 123, 255, 0.05);
+  border: 2px dashed #007bff;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 200px;
+}
+
+.dashboardGrid.drag-mode .dashboardCard {
+  border: 2px dashed #007bff;
+  background: rgba(0, 123, 255, 0.1);
+}
+
+.dashboardGrid.drag-mode .dashboardCard:hover {
+  border-color: #0056b3;
+  background: rgba(0, 123, 255, 0.15);
+  transform: scale(1.02);
+}
+
 .dashboardCard {
   background: white;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.dashboardCard.draggable {
+  cursor: move;
+  user-select: none;
+}
+
+.dashboardCard.draggable:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.dashboardCard.draggable::before {
+  content: '⋮⋮';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #999;
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dashboardCard.draggable:hover::before {
+  opacity: 1;
 }
 
 .dashboardCard h2 {
@@ -70,6 +139,29 @@ body {
   font-size: 1.5rem;
   border-bottom: 2px solid #00ff88;
   padding-bottom: 10px;
+}
+
+/* Drag Instructions */
+.dragInstructions {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #007bff;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1001;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); }
+  50% { box-shadow: 0 4px 25px rgba(0, 123, 255, 0.5); }
+  100% { box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); }
 }
 
 .loading {
