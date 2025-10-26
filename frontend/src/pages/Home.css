@@ -41,15 +41,15 @@
   text-align: center;
   max-width: 600px;
   width: 100%;
-  background: #2c2c2c;
+  background: white;
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  color: white;
+  color: #333;
 }
 
 .modalContent h1 {
-  color: white;
+  color: #333;
   margin-bottom: 30px;
   font-size: 2em;
   font-weight: bold;
@@ -70,7 +70,7 @@
 
 label {
   font-weight: 600;
-  color: #ccc;
+  color: #555;
   margin-bottom: 8px;
   font-size: 1.1em;
   transition: color 0.3s;

@@ -1,9 +1,10 @@
 .header {
-  background: #2c2c2c;
-  border-bottom: 1px solid #444;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .container {
@@ -37,22 +38,19 @@
 }
 
 .signInBtn {
-  background: #2a2a2a;
+  background: #007bff;
   color: white;
-  border: 2px solid #00ff88;
+  border: none;
   padding: 8px 18px;
-  border-radius: 20px;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  transition: all 0.2s ease;
 }
 
 .signInBtn:hover {
-  background: #333;
-  border-color: #00ff88;
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+  background: #0056b3;
   transform: translateY(-1px);
 }
 
@@ -63,7 +61,7 @@
 }
 
 .userInfo {
-  color: white;
+  color: #333;
   font-size: 14px;
   font-weight: 500;
 }
@@ -98,19 +96,19 @@
     height: 35px;
   }
 
-  .signInBtn {
-    padding: 6px 14px;
-    font-size: 13px;
-    border-width: 1px;
-  }
+.signInBtn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
-  .userMenu {
-    gap: 12px;
-  }
-
-  .userInfo {
-    font-size: 13px;
-  }
+.signInBtn:hover {
+  background: #0056b3;
+}
 
   .logoutBtn {
     padding: 6px 12px;
