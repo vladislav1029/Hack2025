@@ -119,6 +119,9 @@ const Home = () => {
     <div className="homePage">
       <div className="container">
         <div className="content">
+          <div className="filterContainer">
+            <Filter />
+          </div>
           <div className="cardsGrid">
             {cards.map(card => (
               card.title === '' ? (
@@ -145,9 +148,6 @@ const Home = () => {
                 />
               )
             ))}
-          </div>
-          <div className="filterContainer">
-            <Filter />
           </div>
         </div>
       </div>

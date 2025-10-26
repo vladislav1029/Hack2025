@@ -47,6 +47,31 @@ input {
   box-sizing: border-box;
 }
 
+textarea, select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+select {
+  background: white;
+}
+
+textarea:focus, select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 input:focus {
   outline: none;
   border-color: #007bff;
@@ -74,6 +99,24 @@ input:focus {
 
 .submitBtn:hover {
   background: #0056b3;
+}
+
+.templatePanel {
+  margin-top: 50px;
+  padding: 30px 0;
+  border-top: 1px solid #eee;
+}
+
+.templatePanel h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.templateForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Responsive Design */
