@@ -172,3 +172,96 @@ input:focus {
   margin: 0 0 15px 0;
   color: #666;
 }
+
+/* Table Styles */
+.templatesTableContainer {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 600px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e5e5;
+}
+
+.templatesTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.templatesTable th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  border: none;
+}
+
+.templatesTable td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.templatesTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.newItemRow {
+  background-color: #e8f5e8;
+}
+
+.newItemRow:hover {
+  background-color: #d4edda;
+}
+
+.newItemRow input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.newItemRow input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.actionButtons .editBtn {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.actionButtons .editBtn:hover {
+  background: #e0a800;
+}
+
+.actionButtons .deleteBtn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.actionButtons .deleteBtn:hover {
+  background: #c82333;
+}

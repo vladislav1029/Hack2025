@@ -40,12 +40,12 @@ const RoleBasedDashboard = () => {
               <Profile />
             </div>
             <div className="dashboardCard">
-              <h2>Templates</h2>
-              <Templates />
+              <h2>Private Files</h2>
+              <PrivateFiles />
             </div>
             <div className="dashboardCard">
-              <h2>Files</h2>
-              <PrivateFiles />
+              <h2>Templates</h2>
+              <Templates />
             </div>
           </div>
         </div>
