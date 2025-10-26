@@ -30,10 +30,14 @@ const RoleBasedDashboard = () => {
       return (
         <div className="adminDashboard">
           <h1>Administrator Dashboard</h1>
-          <div className="dashboardGrid">
+          <div className="dashboardGrid admin-equal-cards">
             <div className="dashboardCard">
               <h2>Projects</h2>
               <Home />
+            </div>
+            <div className="dashboardCard">
+              <h2>Profile</h2>
+              <Profile />
             </div>
             <div className="dashboardCard">
               <h2>Templates</h2>
@@ -42,10 +46,6 @@ const RoleBasedDashboard = () => {
             <div className="dashboardCard">
               <h2>Files</h2>
               <PrivateFiles />
-            </div>
-            <div className="dashboardCard">
-              <h2>Profile</h2>
-              <Profile />
             </div>
           </div>
         </div>

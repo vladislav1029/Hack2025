@@ -42,6 +42,20 @@ body {
   margin-bottom: 20px;
 }
 
+.admin-equal-cards {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr !important;
+}
+
+.admin-equal-cards .dashboardCard:nth-child(4) {
+  grid-column: span 3;
+  grid-row: 2;
+}
+
+.admin-equal-cards .dashboardCard {
+  min-height: 400px;
+}
+
 .dashboardCard {
   background: white;
   border-radius: 12px;
