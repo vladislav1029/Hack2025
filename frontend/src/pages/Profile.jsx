@@ -118,54 +118,7 @@ const Profile = () => {
             </button>
           </div>
 
-          {userData.role === 0 && (
-            <div className="profileCard templateCard">
-              <div className="templateContent">
-                <h2>Шаблоны</h2>
-                <div className="templateForm">
-                  <div className="formGroup">
-                    <label htmlFor="adminTemplateName">Template Name</label>
-                    <input
-                      type="text"
-                      id="adminTemplateName"
-                      placeholder="Enter template name"
-                    />
-                  </div>
 
-                  <div className="formGroup">
-                    <label htmlFor="adminTemplateDescription">Template Description</label>
-                    <textarea
-                      id="adminTemplateDescription"
-                      placeholder="Enter template description"
-                      rows="4"
-                    />
-                  </div>
-
-                  <div className="formGroup">
-                    <label htmlFor="adminTemplateCategory">Template Category</label>
-                    <select id="adminTemplateCategory">
-                      <option value="">Select category</option>
-                      <option value="web">Web</option>
-                      <option value="mobile">Mobile</option>
-                      <option value="desktop">Desktop</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div className="formGroup">
-                    <label htmlFor="adminTemplateTags">Template Tags</label>
-                    <input
-                      type="text"
-                      id="adminTemplateTags"
-                      placeholder="Enter tags separated by commas"
-                    />
-                  </div>
-
-                  <button className="actionButton primary">Create Template</button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
